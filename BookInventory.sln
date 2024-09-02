@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.34902.97
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookInventoryLibrary", "BookInventory\BookInventoryLibrary.csproj", "{DD70B48A-1203-432C-8F48-4534CB5E24AF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookInventoryApp", "BookInventoryApp\BookInventoryApp.csproj", "{79C34148-A12E-4F4F-924B-350A73199D3E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CE8A96BA-45C7-44F0-95E4-9CF84CD356C9}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DD70B48A-1203-432C-8F48-4534CB5E24AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD70B48A-1203-432C-8F48-4534CB5E24AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD70B48A-1203-432C-8F48-4534CB5E24AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD70B48A-1203-432C-8F48-4534CB5E24AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79C34148-A12E-4F4F-924B-350A73199D3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79C34148-A12E-4F4F-924B-350A73199D3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79C34148-A12E-4F4F-924B-350A73199D3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79C34148-A12E-4F4F-924B-350A73199D3E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C6B9E9A4-D832-4D5E-BE04-E5507B9DCA80}
+	EndGlobalSection
+EndGlobal
