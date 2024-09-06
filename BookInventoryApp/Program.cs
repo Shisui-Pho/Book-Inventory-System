@@ -9,6 +9,7 @@ namespace BookInventoryApp
     {
         static void Main(string[] args)
         {
+            //Ignore this 
             _ = args;
             Console.ReadKey(false);
         }//Main
