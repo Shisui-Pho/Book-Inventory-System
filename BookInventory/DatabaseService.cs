@@ -1,4 +1,7 @@
-﻿using System.Data.OleDb;
+﻿/*
+ * This file contains a concrete implementation of the ÏDatabaseService" interface that uses the oldb conection
+ */
+using System.Data.OleDb;
 
 namespace BookInventory
 {
