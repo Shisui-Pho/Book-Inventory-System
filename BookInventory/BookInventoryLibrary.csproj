@@ -41,9 +41,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Author.cs" />
+    <Compile Include="Book.cs" />
+    <Compile Include="BookRepository.cs" />
+    <Compile Include="DatabaseService.cs" />
     <Compile Include="IAuthor.cs" />
     <Compile Include="IBook.cs" />
-    <Compile Include="IBooks.cs" />
+    <Compile Include="IBookRepository.cs" />
     <Compile Include="IDatabaseService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

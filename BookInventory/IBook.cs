@@ -6,8 +6,11 @@ namespace BookInventory
     public interface IBook
     {
         int ID { get; }
+        string Title { get; }
         string ISBN { get; }
         IAuthor BookAuthor { get; }
         string Genre { get; }
+        int PublicationYear { get; }
+        int Quantity { get; }
     }//class
 }//namespace

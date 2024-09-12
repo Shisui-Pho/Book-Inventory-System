@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 namespace BookInventory
 {
-    public interface IBooks
+    public interface IBookRepository
     {
         /// <summary>
         /// This method adds a book to the database
