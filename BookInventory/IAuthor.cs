@@ -5,8 +5,9 @@ namespace BookInventory
 {
     public interface IAuthor
     {
-        string Name { get; set; }
-        string Surname { get; set; }
+        int ID { get; }
+        string Name { get; }
+        string Surname { get; }
         int NumberOfPublishedBooks { get; }
     }//class
 }//namespace
