@@ -10,6 +10,7 @@ namespace BookInventory
         string ISBN { get; }
         IAuthor BookAuthor { get; }
         string Genre { get; }
+        int PublicationYear { get; }
         int Quantity { get; }
     }//class
 }//namespace
