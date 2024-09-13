@@ -102,7 +102,7 @@ namespace BookInventory
             (Exception ex)
             {
                 //Log error
-                ExceptionLogger.GetLogger().LogActivity(ex);
+                ExceptionLogger.GetLogger().LogError(ex);
                 return false;
             }
             finally
@@ -153,7 +153,7 @@ namespace BookInventory
             catch
             (Exception ex)
             {
-                ExceptionLogger.GetLogger().LogActivity(ex);
+                ExceptionLogger.GetLogger().LogError(ex);
             }
             finally
             {
@@ -193,7 +193,7 @@ namespace BookInventory
             catch
             (Exception ex)
             {
-                ExceptionLogger.GetLogger().LogActivity(ex);
+                ExceptionLogger.GetLogger().LogError(ex);
             }
             finally
             {
@@ -244,7 +244,7 @@ namespace BookInventory
             catch
             (Exception ex)
             {
-                ExceptionLogger.GetLogger().LogActivity(ex);
+                ExceptionLogger.GetLogger().LogError(ex);
                 return new List<IBook>();
             }
             finally
@@ -289,7 +289,7 @@ namespace BookInventory
             catch
             (Exception ex)
             {
-                ExceptionLogger.GetLogger().LogActivity(ex); 
+                ExceptionLogger.GetLogger().LogError(ex); 
                 return false;
             }
             finally

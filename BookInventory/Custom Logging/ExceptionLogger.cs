@@ -22,7 +22,7 @@ namespace BookInventory
 
         public static ExceptionLogger GetLogger() => _logger;
 
-        public bool LogActivity(Exception ex, string type = "Database error")
+        public bool LogError(Exception ex, string type = "Database error")
         {
             lock (_lock)
             {
