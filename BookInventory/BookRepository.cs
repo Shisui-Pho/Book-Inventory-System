@@ -99,9 +99,10 @@ namespace BookInventory
                 return isTransactionComplete;
             }
             catch
+            (Exception ex)
             {
-
-                //Log the error somewhere
+                //Log error
+                ExceptionLogger.GetLogger().LogActivity(ex);
                 return false;
             }
             finally
@@ -111,7 +112,7 @@ namespace BookInventory
 
                 if (trans != null)
                     trans.Dispose();
-
+                trans?.Dispose();
                 _connection.Close();
             }//end finally
         }//AddBook
@@ -150,8 +151,9 @@ namespace BookInventory
                 }
             }
             catch
+            (Exception ex)
             {
-                //Log error here
+                ExceptionLogger.GetLogger().LogActivity(ex);
             }
             finally
             {
@@ -189,8 +191,9 @@ namespace BookInventory
                 }
             }
             catch
+            (Exception ex)
             {
-                //Log error messages here
+                ExceptionLogger.GetLogger().LogActivity(ex);
             }
             finally
             {
@@ -239,14 +242,14 @@ namespace BookInventory
                 }//end while
             }
             catch
+            (Exception ex)
             {
-
+                ExceptionLogger.GetLogger().LogActivity(ex);
                 return new List<IBook>();
             }
             finally
             {
                 _connection.Close();
-                _connection.Dispose();
             }
             return books;
         }//LoadAllBooks
@@ -284,9 +287,9 @@ namespace BookInventory
                 trans.Commit();
             }
             catch
-            { 
-
-                //Log errors to somewhere
+            (Exception ex)
+            {
+                ExceptionLogger.GetLogger().LogActivity(ex); 
                 return false;
             }
             finally
@@ -302,7 +305,7 @@ namespace BookInventory
                 }//end if
 
                 _connection.Close();
-            }
+            }//end finally
 
             return isTransactionComplete;
         }//UpdateBook
