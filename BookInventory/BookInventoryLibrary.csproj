@@ -44,6 +44,7 @@
     <Compile Include="Author.cs" />
     <Compile Include="Book.cs" />
     <Compile Include="BookRepository.cs" />
+    <Compile Include="Custom Logging\ExceptionLogger.cs" />
     <Compile Include="DatabaseService.cs" />
     <Compile Include="IAuthor.cs" />
     <Compile Include="IBook.cs" />
