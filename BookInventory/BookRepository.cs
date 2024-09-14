@@ -174,15 +174,15 @@ namespace BookInventory
 
                 while (rd.Read())
                 {
-                    Author auth = new Author(rd["Author.Author_Name"].ToString(), rd["Author.Author_Surname"].ToString());
-                    auth.ID = int.Parse(rd["Author.Author_ID"].ToString());
+                    Author auth = new Author(rd["Author_Name"].ToString(), rd["Author_Surname"].ToString());
+                    auth.ID = int.Parse(rd["Author_ID"].ToString());
                     auth.NumberOfPublishedBooks = GetAuthorPublicationsCount(auth.ID)[0].Value;
 
-                    string genre = rd["Book.Genre"].ToString();
-                    string title = rd["Book.Book_Title"].ToString();
-                    int quantity = int.Parse(rd["Book.Quantity"].ToString());
-                    int publication = int.Parse(rd["Book.PublicationYear"].ToString());
-                    int bookid = int.Parse(rd["Book.Book_ID"].ToString());
+                    string genre = rd["Genre"].ToString();
+                    string title = rd["Book_Title"].ToString();
+                    int quantity = int.Parse(rd["Quantity"].ToString());
+                    int publication = int.Parse(rd["PublicationYear"].ToString());
+                    int bookid = int.Parse(rd["Book_ID"].ToString());
 
                     book = new Book(isbn, title, genre, auth, publication, quantity);
                     ((Book)book).ID = bookid;
@@ -225,18 +225,18 @@ namespace BookInventory
                 while (rd.Read())
                 {
 
-                    Author auth = new Author(rd["Author.Author_Name"].ToString(), rd["Author.Author_Surname"].ToString());
-                    auth.ID = int.Parse(rd["Author.Author_ID"].ToString());
+                    Author auth = new Author(rd["Author_Name"].ToString(), rd["Author_Surname"].ToString());
+                    auth.ID = int.Parse(rd["Author_ID"].ToString());
                     auth.NumberOfPublishedBooks = authorBooksCount.Find(b => b.Key == auth.ID).Value;
 
-                    string isbn = rd["Book.Book_ISBN"].ToString();
-                    string genre = rd["Book.Genre"].ToString();
-                    string title = rd["Book.Book_Title"].ToString();
-                    int quantity = int.Parse(rd["Book.Quantity"].ToString());
-                    int publication = int.Parse(rd["Book.PublicationYear"].ToString());
+                    string isbn = rd["Book_ISBN"].ToString();
+                    string genre = rd["Genre"].ToString();
+                    string title = rd["Book_Title"].ToString();
+                    int quantity = int.Parse(rd["Quantity"].ToString());
+                    int publication = int.Parse(rd["PublicationYear"].ToString());
 
                     Book book = new Book(isbn, title, genre, auth, publication, quantity);
-                    book.ID = int.Parse(rd["Book.Book_ID"].ToString());
+                    book.ID = int.Parse(rd["Book_ID"].ToString());
 
                     books.Add(book);
                 }//end while
