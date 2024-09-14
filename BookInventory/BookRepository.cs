@@ -133,11 +133,8 @@ namespace BookInventory
         private List<KeyValuePair<int, int>> GetAuthorPublicationsCount(int authid = default)
         {
             List<KeyValuePair<int, int>> data = new List<KeyValuePair<int, int>>();
-            try
-            {
-                if (_dbService.GetConnection().State == ConnectionState.Closed)
-                    _dbService.GetConnection().Open();
-
+            try 
+            { 
                 string sql = "qAuthorsPublications";
                 if (authid != default)
                     sql = "qAuthorPublications";
@@ -158,10 +155,6 @@ namespace BookInventory
             (Exception ex)
             {
                 ExceptionLogger.GetLogger().LogError(ex);
-            }
-            finally
-            {
-                _dbService.GetConnection().Close();
             }
             return data;
         }//GetAuthorPublicationsCount
