@@ -18,11 +18,10 @@ namespace BookInventory
             bool isTransactionComplete = false;
             try
             {
-                if (_dbService.GetConnection().State == ConnectionState.Open)
-                    _dbService.GetConnection().Close();
+                if (_dbService.GetConnection().State == ConnectionState.Closed)
+                    _dbService.GetConnection().Open();
                 //Begin a transaction
                 trans = _dbService.GetConnection().BeginTransaction();
-                //_dbService.GetConnection().Open();
 
                 #region Adding the book
                 string _sql = "qAddBook";
@@ -265,8 +264,8 @@ namespace BookInventory
             bool isTransactionComplete = false;
             try
             {
-                if (_dbService.GetConnection().State == ConnectionState.Open)
-                    _dbService.GetConnection().Close();
+                if (_dbService.GetConnection().State == ConnectionState.Closed)
+                    _dbService.GetConnection().Open();
 
                 trans = _dbService.GetConnection().BeginTransaction();
                 //_dbService.GetConnection().Open();
