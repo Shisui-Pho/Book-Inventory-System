@@ -6,11 +6,11 @@ namespace BookInventory
 {
     public class BookRepository : IBookRepository
     {
-        private readonly IDbConnection _connection;
+        private readonly IDatabaseService _dbService;
 
-        public BookRepository(IDbConnection con)
+        public BookRepository(IDatabaseService service)
         {
-            this._connection = con;
+            this._dbService = service;
         }
         public bool AddBook(IBook book)
         {
@@ -19,12 +19,12 @@ namespace BookInventory
             try
             {
                 //Begin a transaction
-                trans = _connection.BeginTransaction();
-                //_connection.Open();
+                trans = _dbService.GetConnection().BeginTransaction();
+                //_dbService.GetConnection().Open();
 
                 #region Adding the book
                 string _sql = "qAddBook";
-                OleDbCommand cmdAddBook = new OleDbCommand(_sql, (OleDbConnection)_connection);
+                OleDbCommand cmdAddBook = new OleDbCommand(_sql, _dbService.GetConnection());
 
                 //Pass all book data as parameters
                 cmdAddBook.Parameters.AddWithValue("@title", book.Title);
@@ -48,7 +48,7 @@ namespace BookInventory
                  //Successfuly inserted
                  //-Get the ID of the book
                 _sql = "SELECT LAST(Book_ID) FROM Book";
-                cmdAddBook = new OleDbCommand(_sql, (OleDbConnection)_connection);
+                cmdAddBook = new OleDbCommand(_sql, _dbService.GetConnection());
                 int bookid = (int)cmdAddBook.ExecuteScalar();
 
                 //Update the book id
@@ -59,7 +59,7 @@ namespace BookInventory
                 if(book.BookAuthor.ID == default)
                 {
                     //Author does not exist in the database
-                    OleDbCommand cmdAddAuthor = new OleDbCommand("qAddBook", (OleDbConnection)_connection);
+                    OleDbCommand cmdAddAuthor = new OleDbCommand("qAddBook", _dbService.GetConnection());
                     cmdAddAuthor.Parameters.AddWithValue("@name", book.BookAuthor.Name);
                     cmdAddAuthor.Parameters.AddWithValue("@surname", book.BookAuthor.Surname);
                     cmdAddAuthor.CommandType = CommandType.StoredProcedure;
@@ -76,7 +76,7 @@ namespace BookInventory
                     cmdAddAuthor.Dispose();
                 }//end if author does not exists
                 _sql = String.Format("qLinkBookAuthor", book.ID, book.BookAuthor.ID);
-                OleDbCommand cmdLinkBookAuthor = new OleDbCommand(_sql, (OleDbConnection)_connection);
+                OleDbCommand cmdLinkBookAuthor = new OleDbCommand(_sql, _dbService.GetConnection());
                 cmdLinkBookAuthor.Parameters.AddWithValue("@bookid", book.ID);
                 cmdLinkBookAuthor.Parameters.AddWithValue("@authorid", book.BookAuthor.ID);
                 cmdLinkBookAuthor.CommandType = CommandType.StoredProcedure;
@@ -113,7 +113,7 @@ namespace BookInventory
                 if (trans != null)
                     trans.Dispose();
                 trans?.Dispose();
-                _connection.Close();
+                _dbService.GetConnection().Close();
             }//end finally
         }//AddBook
 
@@ -133,11 +133,11 @@ namespace BookInventory
             List<KeyValuePair<int, int>> data = new List<KeyValuePair<int, int>>();
             try
             {
-                _connection.Open();
+                _dbService.GetConnection().Open();
                 string sql = "qAuthorsPublications";
                 if (authid != default)
                     sql = "qAuthorPublications";
-                OleDbCommand cmd = new OleDbCommand(sql, (OleDbConnection)_connection);
+                OleDbCommand cmd = new OleDbCommand(sql, _dbService.GetConnection());
                 if (authid != default)
                     cmd.Parameters.AddWithValue("@id", authid);
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -157,7 +157,7 @@ namespace BookInventory
             }
             finally
             {
-                _connection.Close();
+                _dbService.GetConnection().Close();
             }
             return data;
         }//GetAuthorPublicationsCount
@@ -166,9 +166,9 @@ namespace BookInventory
             IBook book = null;
             try
             {
-                _connection.Open();
+                _dbService.GetConnection().Open();
                 string sql = "qFindBookByISBN";
-                OleDbCommand cmd = new OleDbCommand(sql, (OleDbConnection)_connection);
+                OleDbCommand cmd = new OleDbCommand(sql, _dbService.GetConnection());
                 cmd.Parameters.AddWithValue("@isbn", isbn);
                 cmd.CommandType = CommandType.StoredProcedure;
                 OleDbDataReader rd = cmd.ExecuteReader();
@@ -197,7 +197,7 @@ namespace BookInventory
             }
             finally
             {
-                _connection.Close();
+                _dbService.GetConnection().Close();
             }
 
             return book;
@@ -208,10 +208,10 @@ namespace BookInventory
             List<IBook> books = new List<IBook>();
             try
             {
-                _connection.Open();
+                _dbService.GetConnection().Open();
 
                 string sql = "qBookDetails";
-                OleDbCommand cmd = new OleDbCommand(sql, (OleDbConnection)_connection);
+                OleDbCommand cmd = new OleDbCommand(sql, _dbService.GetConnection());
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 //First get the number of books per author
@@ -249,7 +249,7 @@ namespace BookInventory
             }
             finally
             {
-                _connection.Close();
+                _dbService.GetConnection().Close();
             }
             return books;
         }//LoadAllBooks
@@ -265,12 +265,12 @@ namespace BookInventory
             bool isTransactionComplete = false;
             try
             {
-                trans = _connection.BeginTransaction();
-                //_connection.Open();
+                trans = _dbService.GetConnection().BeginTransaction();
+                //_dbService.GetConnection().Open();
                 //Update book details first
                 string sql = "qUpdateBook";
 
-                OleDbCommand cmd = new OleDbCommand(sql, (OleDbConnection)_connection);
+                OleDbCommand cmd = new OleDbCommand(sql, _dbService.GetConnection());
                 cmd.Parameters.AddWithValue("@title", book.Title);
                 cmd.Parameters.AddWithValue("@genre", book.Genre);
                 cmd.Parameters.AddWithValue("@isbn", book.ISBN);
@@ -304,7 +304,7 @@ namespace BookInventory
                     trans.Dispose();
                 }//end if
 
-                _connection.Close();
+                _dbService.GetConnection().Close();
             }//end finally
 
             return isTransactionComplete;
