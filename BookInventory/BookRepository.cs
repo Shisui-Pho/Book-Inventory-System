@@ -18,6 +18,8 @@ namespace BookInventory
             bool isTransactionComplete = false;
             try
             {
+                if (_dbService.GetConnection().State == ConnectionState.Open)
+                    _dbService.GetConnection().Close();
                 //Begin a transaction
                 trans = _dbService.GetConnection().BeginTransaction();
                 //_dbService.GetConnection().Open();
@@ -133,7 +135,9 @@ namespace BookInventory
             List<KeyValuePair<int, int>> data = new List<KeyValuePair<int, int>>();
             try
             {
-                _dbService.GetConnection().Open();
+                if (_dbService.GetConnection().State == ConnectionState.Closed)
+                    _dbService.GetConnection().Open();
+
                 string sql = "qAuthorsPublications";
                 if (authid != default)
                     sql = "qAuthorPublications";
@@ -166,7 +170,9 @@ namespace BookInventory
             IBook book = null;
             try
             {
-                _dbService.GetConnection().Open();
+                if (_dbService.GetConnection().State == ConnectionState.Closed)
+                    _dbService.GetConnection().Open();
+                //_dbService.GetConnection().Open();
                 string sql = "qFindBookByISBN";
                 OleDbCommand cmd = new OleDbCommand(sql, _dbService.GetConnection());
                 cmd.Parameters.AddWithValue("@isbn", isbn);
@@ -208,7 +214,8 @@ namespace BookInventory
             List<IBook> books = new List<IBook>();
             try
             {
-                _dbService.GetConnection().Open();
+                if (_dbService.GetConnection().State == ConnectionState.Closed)
+                    _dbService.GetConnection().Open();
 
                 string sql = "qBookDetails";
                 OleDbCommand cmd = new OleDbCommand(sql, _dbService.GetConnection());
@@ -265,6 +272,9 @@ namespace BookInventory
             bool isTransactionComplete = false;
             try
             {
+                if (_dbService.GetConnection().State == ConnectionState.Open)
+                    _dbService.GetConnection().Close();
+
                 trans = _dbService.GetConnection().BeginTransaction();
                 //_dbService.GetConnection().Open();
                 //Update book details first
