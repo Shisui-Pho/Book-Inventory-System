@@ -25,18 +25,18 @@ namespace BookInventory
 
                 #region Adding the book
                 string _sql = "qAddBook";
-                OleDbCommand cmdAddBook = new OleDbCommand(_sql, _dbService.GetConnection());
+                OleDbCommand cmdAddBook = new OleDbCommand(_sql, _dbService.GetConnection(), (OleDbTransaction)trans);
 
                 //Pass all book data as parameters
-                cmdAddBook.Parameters.AddWithValue("@title", book.Title);
                 cmdAddBook.Parameters.AddWithValue("@isbn", book.ISBN);
+                cmdAddBook.Parameters.AddWithValue("@title", book.Title);
                 cmdAddBook.Parameters.AddWithValue("@publicationYear", book.PublicationYear);
                 cmdAddBook.Parameters.AddWithValue("@quantity", book.Quantity);
                 cmdAddBook.Parameters.AddWithValue("@genre", book.Genre);
 
                 //Configure the command to execute a stored procedure
                 cmdAddBook.CommandType = CommandType.StoredProcedure;
-
+                
                 //Insert data
                 int _status = cmdAddBook.ExecuteNonQuery();
 
@@ -49,7 +49,7 @@ namespace BookInventory
                  //Successfuly inserted
                  //-Get the ID of the book
                 _sql = "SELECT LAST(Book_ID) FROM Book";
-                cmdAddBook = new OleDbCommand(_sql, _dbService.GetConnection());
+                cmdAddBook = new OleDbCommand(_sql, _dbService.GetConnection(), (OleDbTransaction)trans);
                 int bookid = (int)cmdAddBook.ExecuteScalar();
 
                 //Update the book id
@@ -60,7 +60,7 @@ namespace BookInventory
                 if(book.BookAuthor.ID == default)
                 {
                     //Author does not exist in the database
-                    OleDbCommand cmdAddAuthor = new OleDbCommand("qAddBook", _dbService.GetConnection());
+                    OleDbCommand cmdAddAuthor = new OleDbCommand("qAddBook", _dbService.GetConnection(), (OleDbTransaction)trans);
                     cmdAddAuthor.Parameters.AddWithValue("@name", book.BookAuthor.Name);
                     cmdAddAuthor.Parameters.AddWithValue("@surname", book.BookAuthor.Surname);
                     cmdAddAuthor.CommandType = CommandType.StoredProcedure;
@@ -69,7 +69,7 @@ namespace BookInventory
                     if(_status == 0)
                         return isTransactionComplete;//Transaction not complete
 
-                    cmdAddAuthor = new OleDbCommand("SELECT LAST(Author_ID) FROM Author");
+                    cmdAddAuthor = new OleDbCommand("SELECT LAST(Author_ID) FROM Author", _dbService.GetConnection(), (OleDbTransaction)trans);
                     int authid = (int)cmdAddAuthor.ExecuteScalar();
 
                     ((Author)book.BookAuthor).ID = authid;
@@ -77,7 +77,7 @@ namespace BookInventory
                     cmdAddAuthor.Dispose();
                 }//end if author does not exists
                 _sql = String.Format("qLinkBookAuthor", book.ID, book.BookAuthor.ID);
-                OleDbCommand cmdLinkBookAuthor = new OleDbCommand(_sql, _dbService.GetConnection());
+                OleDbCommand cmdLinkBookAuthor = new OleDbCommand(_sql, _dbService.GetConnection(), (OleDbTransaction)trans);
                 cmdLinkBookAuthor.Parameters.AddWithValue("@bookid", book.ID);
                 cmdLinkBookAuthor.Parameters.AddWithValue("@authorid", book.BookAuthor.ID);
                 cmdLinkBookAuthor.CommandType = CommandType.StoredProcedure;
@@ -272,7 +272,7 @@ namespace BookInventory
                 //Update book details first
                 string sql = "qUpdateBook";
 
-                OleDbCommand cmd = new OleDbCommand(sql, _dbService.GetConnection());
+                OleDbCommand cmd = new OleDbCommand(sql, _dbService.GetConnection(), (OleDbTransaction)trans);
                 cmd.Parameters.AddWithValue("@title", book.Title);
                 cmd.Parameters.AddWithValue("@genre", book.Genre);
                 cmd.Parameters.AddWithValue("@isbn", book.ISBN);
