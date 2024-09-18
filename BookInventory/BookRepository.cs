@@ -55,50 +55,10 @@ namespace BookInventory
                 //Update the book id
                 ((Book)book).ID = bookid;
 
-                //Now for the author
-                //First check if the author already exists
-                if(book.BookAuthor.ID == default)
-                {
-                    //Author does not exist in the database
-                    OleDbCommand cmdAddAuthor = new OleDbCommand("qAddBook", _dbService.GetConnection(), (OleDbTransaction)trans);
-                    cmdAddAuthor.Parameters.AddWithValue("@name", book.BookAuthor.Name);
-                    cmdAddAuthor.Parameters.AddWithValue("@surname", book.BookAuthor.Surname);
-                    cmdAddAuthor.CommandType = CommandType.StoredProcedure;
-                    _status = cmdAddAuthor.ExecuteNonQuery();
+                isTransactionComplete = AddAuthors(book, trans);
 
-                    if(_status == 0)
-                        return isTransactionComplete;//Transaction not complete
-
-                    cmdAddAuthor = new OleDbCommand("SELECT LAST(Author_ID) FROM Author", _dbService.GetConnection(), (OleDbTransaction)trans);
-                    int authid = (int)cmdAddAuthor.ExecuteScalar();
-
-                    ((Author)book.BookAuthor).ID = authid;
-
-                    cmdAddAuthor.Dispose();
-                }//end if author does not exists
-                _sql = String.Format("qLinkBookAuthor", book.ID, book.BookAuthor.ID);
-                OleDbCommand cmdLinkBookAuthor = new OleDbCommand(_sql, _dbService.GetConnection(), (OleDbTransaction)trans);
-                cmdLinkBookAuthor.Parameters.AddWithValue("@bookid", book.ID);
-                cmdLinkBookAuthor.Parameters.AddWithValue("@authorid", book.BookAuthor.ID);
-                cmdLinkBookAuthor.CommandType = CommandType.StoredProcedure;
-
-                _status = cmdLinkBookAuthor.ExecuteNonQuery();
-
-                if (_status == 0)
-                    return isTransactionComplete;
-
-                //Commit changes
-                trans.Commit();
-                isTransactionComplete = true;
-
-                //increase the number of books of the author
-                ((Author)book.BookAuthor).NumberOfPublishedBooks += 1;
-
-                //Dispose cotrols
-                cmdAddBook.Dispose();
-                cmdLinkBookAuthor.Dispose();
                 return isTransactionComplete;
-            }
+            }//end try
             catch
             (Exception ex)
             {
@@ -117,7 +77,71 @@ namespace BookInventory
                 _dbService.GetConnection().Close();
             }//end finally
         }//AddBook
+        private bool AddAuthors(IBook book, IDbTransaction transaction)
+        {
+            try
+            {
+                foreach (IAuthor author in book.BookAuthors)
+                {
+                    int _status = default;
+                    OleDbCommand cmd = new OleDbCommand();
+                    cmd.Connection = _dbService.GetConnection();
+                    cmd.Transaction = (OleDbTransaction)transaction;
 
+                    //Author does not exist in the database
+                    if (author.ID == default)
+                    {
+                        //Configure command for addiing a new author
+                        cmd.CommandText = "qAddAuthor";
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@name", author.Name);
+                        cmd.Parameters.AddWithValue("@surname", author.Surname);
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        _status = cmd.ExecuteNonQuery(); //Add author
+
+                        if (_status == 0)
+                            return false; //If nothing was added it means that something wrong has happened
+                        
+                        //Configure command for getting the author id
+                        cmd.CommandText = "SELECT LAST(Author_ID) FROM Author";
+                        cmd.CommandType = CommandType.Text;
+                        int authid = (int)cmd.ExecuteScalar();
+
+                        ((Author)book.BookAuthor).ID = authid;//Set the author id
+                    }
+                    //Checking if the combination already exists in the database
+
+                    string _sql = String.Format("SELECT COUNT(*) FROM BookAuthor WHERE Author_ID = \"{0}\" AND Book_ID = \"{1}\"", author.ID, book.ID);
+
+                    //Configure command for checking if book has already been linked
+                    cmd.CommandText = _sql;
+                    cmd.CommandType = CommandType.Text;
+
+                    bool exists = (int)cmd.ExecuteScalar() >= 0;
+
+                    if (exists)
+                        continue; //Move to the next author if they are already linked
+
+                    //Here we have to link the author and the book
+
+                    //Configureing the commmand for linking the book and the author
+                    cmd.CommandText = "qLinkBookAuthor";
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@bookid", book.ID);
+                    cmd.Parameters.AddWithValue("@authorid", book.BookAuthor.ID);
+
+                    _status = cmd.ExecuteNonQuery();
+
+                    if (_status == 0)//If nothing was added
+                        return false;
+                }//and foreach
+                return true;
+            }//end try
+            catch
+            {
+                return false;
+            }//end catch
+        }//AddAuthors
         public IEnumerable<IBook> FilterBooks(string authorName = null, string genre = null, int? quantity = null)
         {
             throw new NotImplementedException();
