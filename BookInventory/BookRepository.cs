@@ -129,34 +129,39 @@ namespace BookInventory
                 if (predicate(book))
                     yield return book;
         }//FilterBooks
-        private List<KeyValuePair<int, int>> GetAuthorPublicationsCount(int authid = default)
+        private IEnumerable<IAuthor> GetAuthors(int bookid)
         {
-            List<KeyValuePair<int, int>> data = new List<KeyValuePair<int, int>>();
-            try 
-            { 
-                string sql = "qAuthorsPublications";
-                if (authid != default)
-                    sql = "qAuthorPublications";
+            IList<IAuthor> authors = new List<IAuthor>();
+
+            try
+            {
+                //The connection is already open here
+                string sql = "qAuthorsInformationPerBook";
+
                 OleDbCommand cmd = new OleDbCommand(sql, _dbService.GetConnection());
-                if (authid != default)
-                    cmd.Parameters.AddWithValue("@id", authid);
+                cmd.Parameters.AddWithValue("@bookid", bookid);
                 cmd.CommandType = CommandType.StoredProcedure;
                 OleDbDataReader rd = cmd.ExecuteReader();
-
                 while (rd.Read())
                 {
-                    int id = int.Parse(rd["Author_ID"].ToString());
-                    int count = int.Parse(rd["Published"].ToString());
-                    data.Add((new KeyValuePair<int, int>(id, count)));
-                }
-            }
+                    string name = rd["Äuthor_Name"].ToString();
+                    string surname = rd["Author_Surname"].ToString();
+                    int publication = int.Parse(rd["Publications"].ToString());
+                    int authID = int.Parse(rd["Author_ID"].ToString());
+
+                    Author auth = new Author(name, surname, publication);
+                    auth.ID = authID;
+
+                    authors.Add(auth);
+                }//end while
+            }//end try
             catch
             (Exception ex)
             {
                 ExceptionLogger.GetLogger().LogError(ex);
             }
-            return data;
-        }//GetAuthorPublicationsCount
+            return authors;
+        }
         public IBook FindByISBN(string isbn)
         {
             IBook book = null;
@@ -173,17 +178,16 @@ namespace BookInventory
 
                 while (rd.Read())
                 {
-                    Author auth = new Author(rd["Author_Name"].ToString(), rd["Author_Surname"].ToString());
-                    auth.ID = int.Parse(rd["Author_ID"].ToString());
-                    auth.NumberOfPublishedBooks = GetAuthorPublicationsCount(auth.ID)[0].Value;
-
                     string genre = rd["Genre"].ToString();
                     string title = rd["Book_Title"].ToString();
                     int quantity = int.Parse(rd["Quantity"].ToString());
                     int publication = int.Parse(rd["PublicationYear"].ToString());
                     int bookid = int.Parse(rd["Book_ID"].ToString());
 
-                    book = new Book(isbn, title, genre, auth, publication, quantity);
+                    //Get the book authors and their information
+                    IEnumerable<IAuthor> authors = GetAuthors(bookid);
+
+                    book = new Book(isbn, title, genre, authors, publication, quantity);
                     ((Book)book).ID = bookid;
                     break;//Only return the first instance of the book
                 }
@@ -200,7 +204,6 @@ namespace BookInventory
 
             return book;
         }//FindByISBN
-
         public IEnumerable<IBook> LoadAllBooks()
         {
             List<IBook> books = new List<IBook>();
@@ -213,29 +216,22 @@ namespace BookInventory
                 OleDbCommand cmd = new OleDbCommand(sql, _dbService.GetConnection());
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                //First get the number of books per author
-                List<KeyValuePair<int, int>> authorBooksCount = GetAuthorPublicationsCount();
-
-                if (authorBooksCount.Count <= 0)
-                    return books;
-
                 OleDbDataReader rd = cmd.ExecuteReader();
 
                 while (rd.Read())
                 {
-
-                    Author auth = new Author(rd["Author_Name"].ToString(), rd["Author_Surname"].ToString());
-                    auth.ID = int.Parse(rd["Author_ID"].ToString());
-                    auth.NumberOfPublishedBooks = authorBooksCount.Find(b => b.Key == auth.ID).Value;
-
+                    int bookid = int.Parse(rd["Book_ID"].ToString());
                     string isbn = rd["Book_ISBN"].ToString();
                     string genre = rd["Genre"].ToString();
                     string title = rd["Book_Title"].ToString();
                     int quantity = int.Parse(rd["Quantity"].ToString());
                     int publication = int.Parse(rd["PublicationYear"].ToString());
 
-                    Book book = new Book(isbn, title, genre, auth, publication, quantity);
-                    book.ID = int.Parse(rd["Book_ID"].ToString());
+                    //Get the book authors
+                    IEnumerable<IAuthor> authors = GetAuthors(bookid);
+
+                    Book book = new Book(isbn, title, genre, authors, publication, quantity);
+                    book.ID = bookid;
 
                     books.Add(book);
                 }//end while
@@ -252,7 +248,6 @@ namespace BookInventory
             }
             return books;
         }//LoadAllBooks
-
         public bool RemoveBook(IBook book)
         {
             throw new NotImplementedException();
