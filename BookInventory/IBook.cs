@@ -1,6 +1,10 @@
 ﻿/*
  * This file contains an interface that defines the basic structure of the Book model
+ * 
+ * Last Updated  : 18 Septermber 2024
+ * 
  */
+using System.Collections.Generic;
 namespace BookInventory
 {
     public interface IBook
@@ -9,6 +13,7 @@ namespace BookInventory
         string Title { get; }
         string ISBN { get; }
         IAuthor BookAuthor { get; }
+        IEnumerable<IAuthor> BookAuthors { get; }
         string Genre { get; }
         int PublicationYear { get; }
         int Quantity { get; }

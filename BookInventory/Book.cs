@@ -1,6 +1,10 @@
 ﻿/*
  * This file contains the concrete implementation of the IBook interface
+ * 
+ * Last Updated  : 18 Septermber 2024
  */
+using System.Collections.Generic;
+
 namespace BookInventory
 {
     public class Book : IBook
@@ -17,15 +21,16 @@ namespace BookInventory
 
         public int PublicationYear { get; private set; }
 
-        public Book(string isbn, string title, string genre, IAuthor author, int publicationYear,int quantity = 1)
+        public IEnumerable<IAuthor> BookAuthors { get; private set; }
+        public Book(string isbn, string title, string genre, IEnumerable<IAuthor> authors, int publicationYear, int quantity = 1)
         {
             this.ISBN = isbn;
             this.Title = title;
-            this.BookAuthor = author;
+            this.BookAuthors = authors;
             this.Genre = genre;
             this.Quantity = quantity;
             this.PublicationYear = publicationYear;
-        }//ctor 
+        }//ctor main
         public IBook UpdateBook(IBook book)
         {
             this.Title = book.Title;
