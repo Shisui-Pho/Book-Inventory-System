@@ -56,6 +56,8 @@ namespace BookInventory
                 ((Book)book).ID = bookid;
 
                 isTransactionComplete = AddAuthors(book, trans);
+                if (isTransactionComplete)
+                    trans.Commit();//Save the changes
 
                 return isTransactionComplete;
             }//end try
@@ -287,7 +289,7 @@ namespace BookInventory
                     _dbService.GetConnection().Open();
 
                 trans = _dbService.GetConnection().BeginTransaction();
-                //_dbService.GetConnection().Open();
+
                 //Update book details first
                 string sql = "qUpdateBook";
 
@@ -303,14 +305,16 @@ namespace BookInventory
 
                 if (status == 0)
                     return isTransactionComplete;
-                //Here check if the aurthor has been changed
-                //-Need to think about this one
-                trans.Commit();
+                //Also check the authors
+                isTransactionComplete = AddAuthors(book, trans);
+
+                if(isTransactionComplete)
+                    trans.Commit();
             }
             catch
             (Exception ex)
             {
-                ExceptionLogger.GetLogger().LogError(ex); 
+                _ = ExceptionLogger.GetLogger().LogError(ex); 
                 return false;
             }
             finally
