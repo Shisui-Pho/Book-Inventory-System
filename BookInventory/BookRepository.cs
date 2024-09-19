@@ -170,7 +170,7 @@ namespace BookInventory
                 OleDbDataReader rd = cmd.ExecuteReader();
                 while (rd.Read())
                 {
-                    string name = rd["Äuthor_Name"].ToString();
+                    string name = rd["Author_Name"].ToString();
                     string surname = rd["Author_Surname"].ToString();
                     int publication = int.Parse(rd["Publications"].ToString());
                     int authID = int.Parse(rd["Author_ID"].ToString());
@@ -196,7 +196,7 @@ namespace BookInventory
                 if (_dbService.GetConnection().State == ConnectionState.Closed)
                     _dbService.GetConnection().Open();
                 //_dbService.GetConnection().Open();
-                string sql = "qFindBookByISBN";
+                string sql = "qGetBookByISBN";
                 OleDbCommand cmd = new OleDbCommand(sql, _dbService.GetConnection());
                 cmd.Parameters.AddWithValue("@isbn", isbn);
                 cmd.CommandType = CommandType.StoredProcedure;
