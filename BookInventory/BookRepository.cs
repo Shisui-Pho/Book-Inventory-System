@@ -113,13 +113,13 @@ namespace BookInventory
                     }
                     //Checking if the combination already exists in the database
 
-                    string _sql = String.Format("SELECT COUNT(*) FROM BookAuthor WHERE Author_ID = \"{0}\" AND Book_ID = \"{1}\"", author.ID, book.ID);
+                    string _sql = String.Format("SELECT COUNT(*) FROM BookAuthor WHERE Author_ID = {0} AND Book_ID = {1}", author.ID, book.ID);
 
                     //Configure command for checking if book has already been linked
                     cmd.CommandText = _sql;
                     cmd.CommandType = CommandType.Text;
 
-                    bool exists = (int)cmd.ExecuteScalar() >= 0;
+                    bool exists = (int)cmd.ExecuteScalar() > 0;
 
                     if (exists)
                         continue; //Move to the next author if they are already linked
@@ -127,10 +127,8 @@ namespace BookInventory
                     //Here we have to link the author and the book
 
                     //Configureing the commmand for linking the book and the author
-                    cmd.CommandText = "qLinkBookAuthor";
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@bookid", book.ID);
-                    cmd.Parameters.AddWithValue("@authorid", author.ID);
+                    cmd.CommandText = String.Format("INSERT INTO BookAuthor(Author_ID, Book_ID)VALUES({0},{1})", author.ID, book.ID); //"qLinkBookAuthor";
+                    cmd.CommandType = CommandType.Text;
 
                     _status = cmd.ExecuteNonQuery();
 
@@ -140,7 +138,9 @@ namespace BookInventory
                 return true;
             }//end try
             catch
+            (Exception ex)
             {
+                ExceptionLogger.GetLogger().LogError(ex);
                 return false;
             }//end catch
         }//AddAuthors
