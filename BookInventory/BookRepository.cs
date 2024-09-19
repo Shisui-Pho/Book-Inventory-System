@@ -109,7 +109,7 @@ namespace BookInventory
                         cmd.CommandType = CommandType.Text;
                         int authid = (int)cmd.ExecuteScalar();
 
-                        ((Author)book.BookAuthor).ID = authid;//Set the author id
+                        ((Author)author).ID = authid;//Set the author id
                     }
                     //Checking if the combination already exists in the database
 
@@ -130,7 +130,7 @@ namespace BookInventory
                     cmd.CommandText = "qLinkBookAuthor";
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@bookid", book.ID);
-                    cmd.Parameters.AddWithValue("@authorid", book.BookAuthor.ID);
+                    cmd.Parameters.AddWithValue("@authorid", author.ID);
 
                     _status = cmd.ExecuteNonQuery();
 

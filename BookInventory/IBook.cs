@@ -12,7 +12,6 @@ namespace BookInventory
         int ID { get; }
         string Title { get; }
         string ISBN { get; }
-        IAuthor BookAuthor { get; }
         IEnumerable<IAuthor> BookAuthors { get; }
         string Genre { get; }
         int PublicationYear { get; }

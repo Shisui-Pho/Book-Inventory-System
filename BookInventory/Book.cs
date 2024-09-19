@@ -13,7 +13,6 @@ namespace BookInventory
 
         public string ISBN { get; private set; }
         public string Title { get; private set; }
-        public IAuthor BookAuthor { get; private set; }
 
         public string Genre { get; private set; }
 
@@ -35,7 +34,7 @@ namespace BookInventory
         {
             this.Title = book.Title;
             this.ISBN = book.ISBN;
-            this.BookAuthor = book.BookAuthor;
+            this.BookAuthors = book.BookAuthors;
             this.Genre = book.Genre;
             this.Quantity = book.Quantity;
             return this;
