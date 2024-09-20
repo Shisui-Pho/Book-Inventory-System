@@ -145,9 +145,9 @@ namespace BookInventory
                 return false;
             }//end catch
         }//AddAuthors
-        public IEnumerable<IBook> FilterBooks(string authorName = null, string genre = null, int? quantity = null)
+        public IEnumerable<IBook> FilterBooks(string authorName = null, string genre = null, int? quantity = null, string title = null, int? release = null)
         {
-            throw new NotImplementedException();
+            
         }//FilterBooks
         public IEnumerable<IBook> FilterBooks(Predicate<IBook> predicate)
         {
