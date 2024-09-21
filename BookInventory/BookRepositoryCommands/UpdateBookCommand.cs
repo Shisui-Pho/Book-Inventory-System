@@ -3,7 +3,7 @@
  */
 namespace BookInventory
 {
-    class UpdateCommand
+    class UpdateBookCommand
     {
     }
 }

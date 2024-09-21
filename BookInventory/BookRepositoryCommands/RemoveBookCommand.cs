@@ -3,7 +3,7 @@
  */
 namespace BookInventory
 {
-    class DeleteCommand
+    internal class RemoveBookCommand
     {
     }
 }

@@ -8,11 +8,11 @@ using System.Data.OleDb;
 
 namespace BookInventory
 {
-    internal class LoadingCommand
+    internal class LoadingBooksCommand
     {
         private readonly IDatabaseService _dbService;
         private readonly delLoadAuthors GetAuthors;
-        public LoadingCommand(IDatabaseService databaseService, delLoadAuthors getAuthors)
+        public LoadingBooksCommand(IDatabaseService databaseService, delLoadAuthors getAuthors)
         {
             this._dbService = databaseService;
             this.GetAuthors = getAuthors;

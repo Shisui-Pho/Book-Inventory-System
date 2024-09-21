@@ -41,10 +41,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BookRepositoryCommands\DeleteCommand.cs" />
-    <Compile Include="BookRepositoryCommands\FilterCommand.cs" />
-    <Compile Include="BookRepositoryCommands\LoadingCommand.cs" />
-    <Compile Include="BookRepositoryCommands\UpdateCommand.cs" />
+    <Compile Include="BookRepositoryCommands\RemoveBookCommand.cs" />
+    <Compile Include="BookRepositoryCommands\FilterBooksCommand.cs" />
+    <Compile Include="BookRepositoryCommands\LoadingBooksCommand.cs" />
+    <Compile Include="BookRepositoryCommands\UpdateBookCommand.cs" />
     <Compile Include="Models\Author.cs" />
     <Compile Include="Models\Book.cs" />
     <Compile Include="Data\BookRepository.cs" />

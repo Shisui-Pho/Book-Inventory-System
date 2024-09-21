@@ -4,7 +4,7 @@
 
 namespace BookInventory
 {
-    internal class FilterCommand
+    internal class FilterBooksCommand
     {
     }
 }
