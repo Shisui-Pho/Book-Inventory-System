@@ -41,6 +41,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BookRepositoryCommands\DeleteCommand.cs" />
+    <Compile Include="BookRepositoryCommands\FilterCommand.cs" />
+    <Compile Include="BookRepositoryCommands\LoadingCommand.cs" />
+    <Compile Include="BookRepositoryCommands\UpdateCommand.cs" />
     <Compile Include="Models\Author.cs" />
     <Compile Include="Models\Book.cs" />
     <Compile Include="Data\BookRepository.cs" />
@@ -52,8 +56,6 @@
     <Compile Include="Data\IDatabaseService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="BookRepositoryCommands\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
