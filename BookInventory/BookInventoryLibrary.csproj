@@ -41,17 +41,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Author.cs" />
-    <Compile Include="Book.cs" />
-    <Compile Include="BookRepository.cs" />
-    <Compile Include="Custom Logging\ExceptionLogger.cs" />
-    <Compile Include="DatabaseService.cs" />
-    <Compile Include="IAuthor.cs" />
-    <Compile Include="IBook.cs" />
-    <Compile Include="IBookRepository.cs" />
-    <Compile Include="IDatabaseService.cs" />
+    <Compile Include="Models\Author.cs" />
+    <Compile Include="Models\Book.cs" />
+    <Compile Include="Data\BookRepository.cs" />
+    <Compile Include="Utilities\Custom Logging\ExceptionLogger.cs" />
+    <Compile Include="Data\DatabaseService.cs" />
+    <Compile Include="Interfaces\IAuthor.cs" />
+    <Compile Include="Interfaces\IBook.cs" />
+    <Compile Include="Data\IBookRepository.cs" />
+    <Compile Include="Data\IDatabaseService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Commands\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
