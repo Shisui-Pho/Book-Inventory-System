@@ -10,9 +10,11 @@ namespace BookInventory
     internal class AddingBookCommand
     {
         private readonly IDatabaseService _dbService;
-        public AddingBookCommand(IDatabaseService dbService)
+        private readonly delAddAuthors AddAuthors;
+        public AddingBookCommand(IDatabaseService dbService, delAddAuthors addAuthors)
         {
             this._dbService = dbService;
+            this.AddAuthors = addAuthors;
         }
         public bool AddBook(IBook book)
         {
@@ -81,70 +83,5 @@ namespace BookInventory
                 _dbService.GetConnection().Close();
             }//end finally
         }//AddBook
-        private bool AddAuthors(IBook book, IDbTransaction transaction)
-        {
-            try
-            {
-                foreach (IAuthor author in book.BookAuthors)
-                {
-                    int _status = default;
-                    OleDbCommand cmd = new OleDbCommand();
-                    cmd.Connection = _dbService.GetConnection();
-                    cmd.Transaction = (OleDbTransaction)transaction;
-
-                    //Author does not exist in the database
-                    if (author.ID == default)
-                    {
-                        //Configure command for addiing a new author
-                        cmd.CommandText = "qAddAuthor";
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@name", author.Name);
-                        cmd.Parameters.AddWithValue("@surname", author.Surname);
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        _status = cmd.ExecuteNonQuery(); //Add author
-
-                        if (_status == 0)
-                            return false; //If nothing was added it means that something wrong has happened
-
-                        //Configure command for getting the author id
-                        cmd.CommandText = "SELECT LAST(Author_ID) FROM Author";
-                        cmd.CommandType = CommandType.Text;
-                        int authid = (int)cmd.ExecuteScalar();
-
-                        ((Author)author).ID = authid;//Set the author id
-                    }
-                    //Checking if the combination already exists in the database
-
-                    string _sql = String.Format("SELECT COUNT(*) FROM BookAuthor WHERE Author_ID = {0} AND Book_ID = {1}", author.ID, book.ID);
-
-                    //Configure command for checking if book has already been linked
-                    cmd.CommandText = _sql;
-                    cmd.CommandType = CommandType.Text;
-
-                    bool exists = (int)cmd.ExecuteScalar() > 0;
-
-                    if (exists)
-                        continue; //Move to the next author if they are already linked
-
-                    //Here we have to link the author and the book
-
-                    //Configureing the commmand for linking the book and the author
-                    cmd.CommandText = String.Format("INSERT INTO BookAuthor(Author_ID, Book_ID)VALUES({0},{1})", author.ID, book.ID); //"qLinkBookAuthor";
-                    cmd.CommandType = CommandType.Text;
-
-                    _status = cmd.ExecuteNonQuery();
-
-                    if (_status == 0)//If nothing was added
-                        return false;
-                }//and foreach
-                return true;
-            }//end try
-            catch
-            (Exception ex)
-            {
-                ExceptionLogger.GetLogger().LogError(ex);
-                return false;
-            }//end catch
-        }//AddAuthors
     }//class
 }//namespace
