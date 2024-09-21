@@ -4,6 +4,8 @@ using System.Data;
 using System.Data.OleDb;
 namespace BookInventory
 {
+    internal delegate IEnumerable<IAuthor> delLoadAuthors(int bookid);
+    internal delegate bool delAddAuthors(IBook book, IDbTransaction trans);
     public class BookRepository : IBookRepository
     {
         private readonly IDatabaseService _dbService;
