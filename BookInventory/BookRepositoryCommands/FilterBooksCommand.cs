@@ -26,7 +26,7 @@ namespace BookInventory
                 if (predicate(book))
                     yield return book;
         }//FilterBooks
-        public IEnumerable<IBook> FilterBooks(string authorName = null, string genre = null, string title = null, int? release = null)
+        public IEnumerable<IBook> FilterBooks(string authorName, string genre, string title , int? release)
         {
             List<IBook> books = new List<IBook>();
             string _sql = BuildSql(authorName, genre, title, release);
