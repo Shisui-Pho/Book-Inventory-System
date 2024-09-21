@@ -10,6 +10,8 @@ namespace BookInventory
     internal class AddingBookCommand
     {
         private readonly IDatabaseService _dbService;
+
+        //-The AddAuthors Method sits in the BookRepository class
         private readonly delAddAuthors AddAuthors;
         public AddingBookCommand(IDatabaseService dbService, delAddAuthors addAuthors)
         {
@@ -27,7 +29,6 @@ namespace BookInventory
                 //Begin a transaction
                 trans = _dbService.GetConnection().BeginTransaction();
 
-                #region Adding the book
                 string _sql = "qAddBook";
                 OleDbCommand cmdAddBook = new OleDbCommand(_sql, _dbService.GetConnection(), (OleDbTransaction)trans);
 
@@ -43,8 +44,6 @@ namespace BookInventory
 
                 //Insert data
                 int _status = cmdAddBook.ExecuteNonQuery();
-
-                #endregion Adding the book
 
                 //-Check if there was a change or not
                 if (_status == 0)

@@ -10,6 +10,8 @@ namespace BookInventory
     internal class UpdateBookCommand
     {
         private readonly IDatabaseService _dbService;
+
+        //-The AddAuthors Method sits in the BookRepository class
         private readonly delAddAuthors AddAuthors;
         public UpdateBookCommand(IDatabaseService dbService, delAddAuthors addAuthors)
         {

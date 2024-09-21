@@ -12,6 +12,8 @@ namespace BookInventory
     internal class FilterBooksCommand
     {
         private readonly IDatabaseService _dbService;
+
+        //-The GetAuthors Method sits in the BookRepository class
         private readonly delLoadAuthors GetAuthors;
         public FilterBooksCommand(IDatabaseService dbService, delLoadAuthors getAuthors)
         {
