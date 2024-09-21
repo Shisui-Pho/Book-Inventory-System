@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BookRepositoryCommands\AddingBookCommand.cs" />
     <Compile Include="BookRepositoryCommands\RemoveBookCommand.cs" />
     <Compile Include="BookRepositoryCommands\FilterBooksCommand.cs" />
     <Compile Include="BookRepositoryCommands\LoadingBooksCommand.cs" />
