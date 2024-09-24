@@ -46,6 +46,9 @@
     <Compile Include="BookRepositoryCommands\FilterBooksCommand.cs" />
     <Compile Include="BookRepositoryCommands\LoadingBooksCommand.cs" />
     <Compile Include="BookRepositoryCommands\UpdateBookCommand.cs" />
+    <Compile Include="Factory\BookFactory.cs" />
+    <Compile Include="Factory\CreationResult.cs" />
+    <Compile Include="Factory\ICreationResult.cs" />
     <Compile Include="Models\Author.cs" />
     <Compile Include="Models\Book.cs" />
     <Compile Include="Data\BookRepository.cs" />
