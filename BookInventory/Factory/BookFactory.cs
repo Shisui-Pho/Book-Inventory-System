@@ -9,6 +9,17 @@ namespace BookInventory
 {
     public class BookFactory
     {
+        /// <summary>
+        /// Creates a new book instance with the provided details, ensuring validation on the ISBN, title, and other parameters.
+        /// </summary>
+        /// <param name="title">The title of the book. Cannot be null or whitespace.</param>
+        /// <param name="isbn">The ISBN of the book. Must be a valid 13-character string containing only digits.</param>
+        /// <param name="genre">The genre of the book. Cannot be null or empty.</param>
+        /// <param name="publishYear">The year the book was published. Must be a valid year within a reasonable range (e.g., 1450 to current year).</param>
+        /// <param name="authors">The primary authors of the book. Cannot be null.</param>
+        /// <param name="quantity">The number of copies available. Must be a positive integer, default is 1.</param>
+        /// <returns>Returns an ICreationResult containing either the successfully created IBook or validation failure details.</returns>
+
         public static ICreationResult<IBook> CreateBook(string title, string isbn, string genre, int publishYear, IEnumerable<IAuthor> authors, int quantity = 1)
         {
             // Validate title
