@@ -1,5 +1,5 @@
 ﻿/*
- * This file contains the BookRepository class which ascts a "Facede" for the CRUD operations implemented by the different commands on books(database)
+ * This file contains the BookRepository class which acts as a "Facede" for the CRUD operations implemented by the different commands on books(database)
  */
 
 using System;
@@ -133,7 +133,7 @@ namespace BookInventory
 
                     if (_status == 0)//If nothing was added
                         return false;
-                }//and foreach
+                }//end foreach
                 return true;
             }//end try
             catch

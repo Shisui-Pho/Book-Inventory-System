@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace BookInventory
 {
-    public class Book : IBook
+    internal class Book : IBook
     {
         public int ID { get; internal set; }
 

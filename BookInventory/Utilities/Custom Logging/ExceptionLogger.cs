@@ -1,5 +1,5 @@
 ﻿/*
- *  This file contains the looger file that log all the database error messages to a textfile.
+ *  This file contains the loger class that log all the database error messages to a textfile.
  *  The implementation uses a singleton pattern
  */
 using System;
