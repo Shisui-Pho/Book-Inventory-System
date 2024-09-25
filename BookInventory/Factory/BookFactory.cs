@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using BookInventory.Utilities;
 namespace BookInventory
 {
     public class BookFactory
@@ -51,7 +51,12 @@ namespace BookInventory
             return new CreationResult<IBook>("Quantity must be at least 1.", null, false);
 
             // If all validations pass, create the book
+
+            //-Format the isbn
+            isbn = ISBNFormatterService.ToISBNFormat(isbn);
             IBook newBook = new Book(isbn,title, genre, authors,publishYear, quantity);
+
+            //Return the results with the book object
             return new CreationResult<IBook>("Book created successfully.", newBook, true);
         }//CreateBook
     }//class
