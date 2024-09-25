@@ -56,10 +56,9 @@ namespace BookInventory
             {
                 if (trans != null)
                 {
-                    if (isTransactionComplete)
-                        trans.Commit();
-                    else
+                    if (!isTransactionComplete)
                         trans.Rollback();
+
                     trans.Dispose();
                 }//end 
                 _dbService.GetConnection().Close();
