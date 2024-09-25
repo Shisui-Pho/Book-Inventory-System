@@ -30,8 +30,11 @@ namespace BookInventory
             //-We remove all posisible valid characters that are not numbers
             isbn = isbn.Replace("-", "").Replace(" ", "");
 
-            if (isbn.Length != 13 || !isbn.All(char.IsDigit))
-                return new CreationResult<IBook>("Invalid ISBN. Must be 13 digits.", null, false);
+            if(!isbn.All(char.IsDigit))
+                return new CreationResult<IBook>("Invalid ISBN. Must be 13 or 10 digits.", null, false);
+
+            if (isbn.Length != 13 && isbn.Length != 10 )
+                return new CreationResult<IBook>("Invalid ISBN. Must be 13 or 10 digits.", null, false);
 
             // Validate genre
             if (string.IsNullOrWhiteSpace(genre))
