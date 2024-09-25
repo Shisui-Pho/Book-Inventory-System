@@ -52,7 +52,14 @@ namespace BookInventory
                     //Get the book authors
                     IEnumerable<IAuthor> authors = GetAuthors(bookid);
 
-                    Book book = new Book(isbn, title, genre, authors, publication, quantity);
+                    #warning Still need to deal with invalid input/data
+                    //For now we assume that the data retrieved from the database is valid
+                    //-Of course this may not be always the case
+                    //-For instance, an "Database Admin" may manually change the data from the database itself
+
+                    ICreationResult<IBook> result = BookFactory.CreateBook(title, isbn, genre, publication, authors, quantity);
+                    Book book = (Book)result.Item;
+
                     book.ID = bookid;
 
                     books.Add(book);
