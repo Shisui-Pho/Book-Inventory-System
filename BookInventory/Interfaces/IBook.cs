@@ -16,5 +16,6 @@ namespace BookInventory
         string Genre { get; }
         int PublicationYear { get; }
         int Quantity { get; }
+        IBook UpdateBook(IBook book);
     }//class
 }//namespace

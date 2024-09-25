@@ -163,7 +163,14 @@ namespace BookInventory
                     int publication = int.Parse(rd["Publications"].ToString());
                     int authID = int.Parse(rd["Author_ID"].ToString());
 
-                    Author auth = new Author(name, surname, publication);
+
+                    #warning Still need to deal with invalid input/data
+                    //For now we assume that the data retrieved from the database is valid
+                    //-Of course this may not be always the case
+                    //-For instance, an "Database Admin" may manually change the data from the database itself
+
+                    ICreationResult<IAuthor> result = AuthorFactory.CreateAuthor(name, surname, publication);
+                    Author auth = (Author)result.Item;
                     auth.ID = authID;
 
                     authors.Add(auth);

@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using BookInventory.Utilities;
 namespace BookInventory
 {
     public class BookFactory
@@ -30,8 +30,11 @@ namespace BookInventory
             //-We remove all posisible valid characters that are not numbers
             isbn = isbn.Replace("-", "").Replace(" ", "");
 
-            if (isbn.Length != 13 || !isbn.All(char.IsDigit))
-                return new CreationResult<IBook>("Invalid ISBN. Must be 13 digits.", null, false);
+            if(!isbn.All(char.IsDigit))
+                return new CreationResult<IBook>("Invalid ISBN. Must be 13 or 10 digits.", null, false);
+
+            if (isbn.Length != 13 && isbn.Length != 10 )
+                return new CreationResult<IBook>("Invalid ISBN. Must be 13 or 10 digits.", null, false);
 
             // Validate genre
             if (string.IsNullOrWhiteSpace(genre))
@@ -51,7 +54,12 @@ namespace BookInventory
             return new CreationResult<IBook>("Quantity must be at least 1.", null, false);
 
             // If all validations pass, create the book
+
+            //-Format the isbn
+            isbn = ISBNFormatterService.ToISBNFormat(isbn);
             IBook newBook = new Book(isbn,title, genre, authors,publishYear, quantity);
+
+            //Return the results with the book object
             return new CreationResult<IBook>("Book created successfully.", newBook, true);
         }//CreateBook
     }//class
