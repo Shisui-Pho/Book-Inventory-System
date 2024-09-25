@@ -32,11 +32,18 @@ namespace BookInventory
         }//ctor main
         public IBook UpdateBook(IBook book)
         {
+            if (book is null)
+                return default(IBook);
+
+            //Updating the book properties
+            //-Note that we do not change the Book_ID since the 
             this.Title = book.Title;
             this.ISBN = book.ISBN;
             this.BookAuthors = book.BookAuthors;
             this.Genre = book.Genre;
             this.Quantity = book.Quantity;
+
+            //Return the current instance
             return this;
         }//UpdateBook
     }//class
