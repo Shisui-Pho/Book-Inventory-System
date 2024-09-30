@@ -92,24 +92,44 @@ namespace BookInventory
                     //Author does not exist in the database
                     if (author.ID == default)
                     {
-                        //Configure command for addiing a new author
-                        cmd.CommandText = "qAddAuthor";
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@name", author.Name);
-                        cmd.Parameters.AddWithValue("@surname", author.Surname);
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        _status = cmd.ExecuteNonQuery(); //Add author
-
-                        if (_status == 0)
-                            return false; //If nothing was added it means that something wrong has happened
-
-                        //Configure command for getting the author id
-                        cmd.CommandText = "SELECT LAST(Author_ID) FROM Author";
+                        //First we need to check if the author exists in the database
+                        //-This of course can be simplified by creating a script file and exercuting it to wrap all the multipl database calls
+                        cmd.CommandText = String.Format("SELECT * FROM Author WHERE Author.Author_Name = \"{0}\" AND Author.Author_Surname = \"{1}\"", author.Name, author.Surname);
                         cmd.CommandType = CommandType.Text;
-                        int authid = (int)cmd.ExecuteScalar();
 
-                        ((Author)author).ID = authid;//Set the author id
-                    }
+                        OleDbDataReader rd = cmd.ExecuteReader();
+
+                        //Here we will know if that particular author exists or not
+                        while (rd.Read())
+                        {
+                            //Only grab the first one if it exists
+                            //-Assign the ID to that Author
+                            ((Author)author).ID = int.Parse(rd["Author_ID"].ToString());
+                            break;
+                        }
+                        if(author.ID == default)
+                        {
+                            //Configure command for addiing a new author
+                            cmd.CommandText = "qAddAuthor";
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            cmd.Parameters.AddWithValue("@name", author.Name);
+                            cmd.Parameters.AddWithValue("@surname", author.Surname);
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            _status = cmd.ExecuteNonQuery(); //Add author
+
+                            if (_status == 0)
+                                return false; //If nothing was added it means that something wrong has happened
+
+                            //Configure command for getting the author id
+                            cmd.CommandText = "SELECT LAST(Author_ID) FROM Author";
+                            cmd.CommandType = CommandType.Text;
+                            int authid = (int)cmd.ExecuteScalar();
+
+                            ((Author)author).ID = authid;//Set the author id
+                        }//end if author was not found
+                    }//End if author is null
+
+
                     //Checking if the combination already exists in the database
 
                     string _sql = String.Format("SELECT COUNT(*) FROM BookAuthor WHERE Author_ID = {0} AND Book_ID = {1}", author.ID, book.ID);
