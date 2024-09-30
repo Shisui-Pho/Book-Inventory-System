@@ -41,20 +41,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BookRepositoryCommands\AddingBookCommand.cs" />
-    <Compile Include="BookRepositoryCommands\RemoveBookCommand.cs" />
-    <Compile Include="BookRepositoryCommands\FilterBooksCommand.cs" />
-    <Compile Include="BookRepositoryCommands\LoadingBooksCommand.cs" />
-    <Compile Include="BookRepositoryCommands\UpdateBookCommand.cs" />
+    <Compile Include="AccessBookRepositoryCommands\AddingBookCommand.cs" />
+    <Compile Include="AccessBookRepositoryCommands\RemoveBookCommand.cs" />
+    <Compile Include="AccessBookRepositoryCommands\FilterBooksCommand.cs" />
+    <Compile Include="AccessBookRepositoryCommands\LoadingBooksCommand.cs" />
+    <Compile Include="AccessBookRepositoryCommands\UpdateBookCommand.cs" />
     <Compile Include="Factory\AuthorFactory.cs" />
     <Compile Include="Factory\BookFactory.cs" />
+    <Compile Include="Factory\BookRepositoryFactory.cs" />
     <Compile Include="Factory\CreationResult.cs" />
+    <Compile Include="Factory\DatabaseType.cs" />
     <Compile Include="Factory\ICreationResult.cs" />
     <Compile Include="Models\Author.cs" />
     <Compile Include="Models\Book.cs" />
-    <Compile Include="Data\BookRepository.cs" />
+    <Compile Include="Data\AccessBookRepository.cs" />
     <Compile Include="Utilities\Custom Logging\ExceptionLogger.cs" />
-    <Compile Include="Data\DatabaseService.cs" />
+    <Compile Include="Data\AccessDatabaseService.cs" />
     <Compile Include="Interfaces\IAuthor.cs" />
     <Compile Include="Interfaces\IBook.cs" />
     <Compile Include="Data\IBookRepository.cs" />

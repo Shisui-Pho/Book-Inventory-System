@@ -2,17 +2,18 @@
  * This file contains a concrete implementation of the ÏDatabaseService" interface that uses the oldb conection
  */
 using System.Data.OleDb;
+using System.Data;
 
 namespace BookInventory
 {
-    public class DatabaseService : IDatabaseService
+    public class AccessDatabaseService : IDatabaseService
     {
         private readonly OleDbConnection _con;
-        public DatabaseService(string _connectionString)
+        public AccessDatabaseService(string _connectionString)
         {
             _con = new OleDbConnection(_connectionString);
         }
-        public OleDbConnection GetConnection()
+        public IDbConnection GetConnection()
         {
             return _con;
         }//GetConnection

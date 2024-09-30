@@ -1,7 +1,7 @@
 ﻿/*
  * This file containes the interface for the database service model
  */
-using System.Data.OleDb;
+using System.Data;
 namespace BookInventory
 {
     public interface IDatabaseService
@@ -10,6 +10,6 @@ namespace BookInventory
         /// Gets the database connection.
         /// </summary>
         /// <returns>Returns the database connection</returns>
-        OleDbConnection GetConnection();
+        IDbConnection GetConnection();
     }//interface
 }//namespace

@@ -37,7 +37,7 @@ namespace BookInventory
                 if (_dbService.GetConnection().State == ConnectionState.Closed)
                     _dbService.GetConnection().Open();
 
-                OleDbCommand cmd = new OleDbCommand(_sql, _dbService.GetConnection());
+                OleDbCommand cmd = new OleDbCommand(_sql, (OleDbConnection)_dbService.GetConnection());
                 OleDbDataReader rd = cmd.ExecuteReader();//Read the filtered data
 
                 while (rd.Read())

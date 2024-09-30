@@ -11,12 +11,12 @@ namespace BookInventory
     //delegates for passing helper methods to the command classes
     internal delegate IEnumerable<IAuthor> delLoadAuthors(int bookid);
     internal delegate bool delAddAuthors(IBook book, IDbTransaction trans);
-    public class BookRepository : IBookRepository
+    internal class AccessBookRepository : IBookRepository
     {
         //Database service 
         private readonly IDatabaseService _dbService;
 
-        public BookRepository(IDatabaseService service)
+        public AccessBookRepository(IDatabaseService service)
         {
             this._dbService = service;
         }
@@ -86,7 +86,7 @@ namespace BookInventory
                 {
                     int _status = default;
                     OleDbCommand cmd = new OleDbCommand();
-                    cmd.Connection = _dbService.GetConnection();
+                    cmd.Connection = (OleDbConnection)_dbService.GetConnection();
                     cmd.Transaction = (OleDbTransaction)transaction;
 
                     //Author does not exist in the database
@@ -172,7 +172,7 @@ namespace BookInventory
                 //The connection is already open here
                 string sql = "qAuthorsInformationPerBook";
 
-                OleDbCommand cmd = new OleDbCommand(sql, _dbService.GetConnection());
+                OleDbCommand cmd = new OleDbCommand(sql, (OleDbConnection)_dbService.GetConnection());
                 cmd.Parameters.AddWithValue("@bookid", bookid);
                 cmd.CommandType = CommandType.StoredProcedure;
                 OleDbDataReader rd = cmd.ExecuteReader();
