@@ -11,12 +11,12 @@ namespace BookInventory
     //delegates for passing helper methods to the command classes
     internal delegate IEnumerable<IAuthor> delLoadAuthors(int bookid);
     internal delegate bool delAddAuthors(IBook book, IDbTransaction trans);
-    public class BookRepository : IBookRepository
+    public class AccessBookRepository : IBookRepository
     {
         //Database service 
         private readonly IDatabaseService _dbService;
 
-        public BookRepository(IDatabaseService service)
+        public AccessBookRepository(IDatabaseService service)
         {
             this._dbService = service;
         }
