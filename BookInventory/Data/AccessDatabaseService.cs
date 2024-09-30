@@ -5,10 +5,10 @@ using System.Data.OleDb;
 
 namespace BookInventory
 {
-    public class DatabaseService : IDatabaseService
+    public class AccessDatabaseService : IDatabaseService
     {
         private readonly OleDbConnection _con;
-        public DatabaseService(string _connectionString)
+        public AccessDatabaseService(string _connectionString)
         {
             _con = new OleDbConnection(_connectionString);
         }

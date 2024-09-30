@@ -54,7 +54,7 @@
     <Compile Include="Models\Book.cs" />
     <Compile Include="Data\BookRepository.cs" />
     <Compile Include="Utilities\Custom Logging\ExceptionLogger.cs" />
-    <Compile Include="Data\DatabaseService.cs" />
+    <Compile Include="Data\AccessDatabaseService.cs" />
     <Compile Include="Interfaces\IAuthor.cs" />
     <Compile Include="Interfaces\IBook.cs" />
     <Compile Include="Data\IBookRepository.cs" />
