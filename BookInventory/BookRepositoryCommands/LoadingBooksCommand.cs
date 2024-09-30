@@ -29,7 +29,7 @@ namespace BookInventory
                     _dbService.GetConnection().Open();
 
                 string sql = "qBookDetails";
-                OleDbCommand cmd = new OleDbCommand(sql, _dbService.GetConnection());
+                OleDbCommand cmd = new OleDbCommand(sql, (OleDbConnection)_dbService.GetConnection());
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 OleDbDataReader rd = cmd.ExecuteReader();
@@ -79,7 +79,7 @@ namespace BookInventory
                     _dbService.GetConnection().Open();
                 //_dbService.GetConnection().Open();
                 string sql = "qGetBookByISBN";
-                OleDbCommand cmd = new OleDbCommand(sql, _dbService.GetConnection());
+                OleDbCommand cmd = new OleDbCommand(sql, (OleDbConnection)_dbService.GetConnection());
                 cmd.Parameters.AddWithValue("@isbn", isbn);
                 cmd.CommandType = CommandType.StoredProcedure;
                 OleDbDataReader rd = cmd.ExecuteReader();

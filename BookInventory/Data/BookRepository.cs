@@ -86,7 +86,7 @@ namespace BookInventory
                 {
                     int _status = default;
                     OleDbCommand cmd = new OleDbCommand();
-                    cmd.Connection = _dbService.GetConnection();
+                    cmd.Connection = (OleDbConnection)_dbService.GetConnection();
                     cmd.Transaction = (OleDbTransaction)transaction;
 
                     //Author does not exist in the database
@@ -172,7 +172,7 @@ namespace BookInventory
                 //The connection is already open here
                 string sql = "qAuthorsInformationPerBook";
 
-                OleDbCommand cmd = new OleDbCommand(sql, _dbService.GetConnection());
+                OleDbCommand cmd = new OleDbCommand(sql, (OleDbConnection)_dbService.GetConnection());
                 cmd.Parameters.AddWithValue("@bookid", bookid);
                 cmd.CommandType = CommandType.StoredProcedure;
                 OleDbDataReader rd = cmd.ExecuteReader();

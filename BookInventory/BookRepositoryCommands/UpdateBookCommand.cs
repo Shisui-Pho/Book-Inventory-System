@@ -32,7 +32,7 @@ namespace BookInventory
                 //Update book details first
                 string sql = "qUpdateBook";
 
-                OleDbCommand cmd = new OleDbCommand(sql, _dbService.GetConnection(), (OleDbTransaction)trans);
+                OleDbCommand cmd = new OleDbCommand(sql, (OleDbConnection)_dbService.GetConnection(), (OleDbTransaction)trans);
                 cmd.Parameters.AddWithValue("@title", book.Title);
                 cmd.Parameters.AddWithValue("@genre", book.Genre);
                 cmd.Parameters.AddWithValue("@isbn", book.ISBN);

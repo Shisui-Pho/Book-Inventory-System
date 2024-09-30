@@ -25,10 +25,10 @@ namespace BookInventory
                 if (_dbService.GetConnection().State == ConnectionState.Closed)
                     _dbService.GetConnection().Open();
 
-                trans = _dbService.GetConnection().BeginTransaction();
+                trans = (OleDbTransaction)_dbService.GetConnection().BeginTransaction();
 
                 OleDbCommand cmd = new OleDbCommand();
-                cmd.Connection = _dbService.GetConnection();
+                cmd.Connection = (OleDbConnection)_dbService.GetConnection();
                 cmd.Transaction = trans;
                 cmd.CommandText = "qDeleteBookAuthor";
                 cmd.CommandType = CommandType.StoredProcedure;

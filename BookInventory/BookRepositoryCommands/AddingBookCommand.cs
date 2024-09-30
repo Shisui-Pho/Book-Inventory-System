@@ -30,7 +30,7 @@ namespace BookInventory
                 trans = _dbService.GetConnection().BeginTransaction();
 
                 string _sql = "qAddBook";
-                OleDbCommand cmdAddBook = new OleDbCommand(_sql, _dbService.GetConnection(), (OleDbTransaction)trans);
+                OleDbCommand cmdAddBook = new OleDbCommand(_sql,(OleDbConnection)_dbService.GetConnection(), (OleDbTransaction)trans);
 
                 //Pass all book data as parameters
                 cmdAddBook.Parameters.AddWithValue("@isbn", book.ISBN);
@@ -52,7 +52,7 @@ namespace BookInventory
                 //Successfuly inserted
                 //-Get the ID of the book
                 _sql = "SELECT LAST(Book_ID) FROM Book";
-                cmdAddBook = new OleDbCommand(_sql, _dbService.GetConnection(), (OleDbTransaction)trans);
+                cmdAddBook = new OleDbCommand(_sql, (OleDbConnection)_dbService.GetConnection(), (OleDbTransaction)trans);
                 int bookid = (int)cmdAddBook.ExecuteScalar();
 
                 //Update the book id
