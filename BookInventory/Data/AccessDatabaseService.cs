@@ -2,6 +2,7 @@
  * This file contains a concrete implementation of the ÏDatabaseService" interface that uses the oldb conection
  */
 using System.Data.OleDb;
+using System.Data;
 
 namespace BookInventory
 {
@@ -12,7 +13,7 @@ namespace BookInventory
         {
             _con = new OleDbConnection(_connectionString);
         }
-        public OleDbConnection GetConnection()
+        public IDbConnection GetConnection()
         {
             return _con;
         }//GetConnection
