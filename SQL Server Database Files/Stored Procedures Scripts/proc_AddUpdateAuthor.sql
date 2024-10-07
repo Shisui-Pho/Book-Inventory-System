@@ -35,7 +35,7 @@ BEGIN
             -- Author exists, update the author's details
             UPDATE Author
             SET Author_Name = @AuthorName,
-                AuthorSurname = @AuthorSurname
+                Author_Surname = @AuthorSurname
             WHERE Author_ID = @AuthorID;
 
             -- Check if the update was successful
