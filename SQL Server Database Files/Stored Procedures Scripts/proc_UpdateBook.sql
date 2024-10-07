@@ -1,4 +1,4 @@
-CREATE PROCEDURE proc_UpdateBook
+ALTER PROCEDURE proc_UpdateBook
                  --For the book table
                 @Book_ISBN          VARCHAR(20),
                 @Book_Title         NVARCHAR(500),
