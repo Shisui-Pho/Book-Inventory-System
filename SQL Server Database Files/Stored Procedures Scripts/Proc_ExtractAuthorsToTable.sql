@@ -1,11 +1,31 @@
-/*
-    This is a helper procedure to extract the string of authors into a table of authors
-    This procedure uses the SplitBookInfo function which is defined in the database
-*/
-CREATE PROCEDURE helper_proc_ExtractAuthorsToTable
+ALTER PROCEDURE helper_proc_ExtractAuthorsToTable
                  @Authors               VARCHAR(MAX)
 AS 
 BEGIN
+    --=====================================================================
+    --Procedure Name: helper_proc_ExtractAuthorsToTable
+    --Description: This helper procedure extracts author information from a 
+    --             formatted string and inserts it into a temporary table. 
+    --             It utilizes the SplitBookInfo function to parse the author 
+    --             records into separate fields.
+    --
+    --Parameters:
+    --    @Authors (VARCHAR(MAX)): A string containing author records formatted as:
+    --             id1,''name1'', ''surname1'';id2,''name2'',''surname2'';...
+    --             Each author record should be separated by a semicolon (;).
+    -- 
+    --Return Values: 
+    --    Returns the records from the temporary table containing extracted 
+    --    author details (ID, AuthorName, AuthorSurname).
+    --
+    --Example Call: 
+    --    EXEC helper_proc_ExtractAuthorsToTable 
+    --        @Authors = '0,''John'',''Doe'';0,''Jane'',''Smith''';
+    --
+    --Note: This procedure uses the STRING_SPLIT function available in SQL Server 
+    --      for breaking the input string into records.
+    --=====================================================================
+    
     --Create a tempory author table for authors
     CREATE TABLE #TempAuthors 
     (
