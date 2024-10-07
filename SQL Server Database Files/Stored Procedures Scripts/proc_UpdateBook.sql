@@ -6,20 +6,45 @@ CREATE PROCEDURE proc_UpdateBook
                 @Publication        SMALLINT,
                 @Genre              VARCHAR(200),
                 @Book_ID            INT OUTPUT, -- ID Of the book will be needed on the client side
-                --For the authors
-                --The authors details are passed here, each record must be seperated by a semicolon (;) and each
-                --      and each field must be seperated by a coma with a " acting as a text qualifier
-                --The format should be as follows
-                -->     id1,''name1'', ''surname1'';id2,''name2'',''surname2'';id3,''name3'',''surname3'';.......
-                -- NOTE : the string lateral is enclosed with DOUBLE SINGLE quotes (') and not double quote (")
 
-                -- The default "id" should be 0, which indicates that the author should be added to the Author table
-                -- After the insertion, the authors and book will be linked in the BookAuthor table 
-
-                --All authors of the previous book will be removed and replaced with this new authors
                 @Authors            VARCHAR(MAX)
 AS
 BEGIN 
+    -- =====================================================================
+    -- Procedure Name: proc_UpdateBook
+    -- Description: Updates an existing book's details in the Book table 
+    --              and replaces its associated authors with new entries 
+    --              provided in the format specified. All previous authors 
+    --              will be removed before linking the new authors.
+    --
+    -- Parameters:
+    --     @Book_ISBN (VARCHAR(20)): ISBN of the book.
+    --     @Book_Title (NVARCHAR(500)): Title of the book.
+    --     @Quantity (SMALLINT): Quantity of the book.
+    --     @Publication (SMALLINT): Publication year of the book.
+    --     @Genre (VARCHAR(200)): Genre of the book.
+    --     @Book_ID (INT OUTPUT): Output parameter to return the ID of the 
+    --                            updated book.
+    --     @Authors (VARCHAR(MAX)): Author details formatted as:
+    --         id1,''name1'', ''surname1'';id2,''name2'',''surname2'';...
+    --         where id is 0 to add a new author, and each field is 
+    --         separated by a comma, with double single quotes as text qualifiers.
+    --
+    -- Return Values:
+    --     0: An error occurred during the update process.
+    --     -1: An error occurred during deletion or author insertion.
+    --     1: Update and author replacement completed successfully.
+    --
+    -- Example Call: EXEC proc_UpdateBook 
+    --                @Book_ISBN = '1234567890123', 
+    --                @Book_Title = N'Updated Book Title', 
+    --                @Quantity = 5, 
+    --                @Publication = 2024, 
+    --                @Genre = 'Non-Fiction', 
+    --                @Book_ID = @OutputBookID OUTPUT, 
+    --                @Authors = '2,''Alice'',''Smith'';3,''Bob'',''Johnson''';
+    -- =====================================================================
+
     BEGIN TRANSACTION tras1
 
     --Create a tempory author table for authors
@@ -44,8 +69,7 @@ BEGIN
     IF @@ERROR <> 0 OR @@ROWCOUNT < 1
     BEGIN
         ROLLBACK TRANSACTION trans1;
-        SELECT 0 AS ERROR;
-        RETURN;
+        RETURN 0;
     END
 
     --Here the book update was a success 
