@@ -1,23 +1,52 @@
-CREATE PROCEDURE proc_AddBook
+ALTER PROCEDURE proc_AddBook
                 --For the book table
                 @Book_ISBN          VARCHAR(20),
                 @Book_Title         NVARCHAR(500),
                 @Quantity           SMALLINT,
                 @Publication        SMALLINT,
                 @Genre              VARCHAR(200),
-                @Book_ID            INT OUTPUT, -- ID Of the book will be needed on the client side
-                --For the authors
-                --The authors details are passed here, each record must be seperated by a semicolon (;) and each
-                --      and each field must be seperated by a coma with a " acting as a text qualifier
-                --The format should be as follows
-                -->     id1,''name1'', ''surname1'';id2,''name2'',''surname2'';id3,''name3'',''surname3'';.......
-                -- NOTE : the string lateral is enclosed with DOUBLE SINGLE quotes (') and not double quote (")
+                @Book_ID            INT OUTPUT, -- ID of the book needed on the client side
 
-                -- The default "id" should be 0, which indicates that the author should be added to the Author table
-                -- After the insertion, the authors and book will be linked in the BookAuthor table 
-                @Authors            VARCHAR(MAX)
+
+                @Authors            VARCHAR(MAX)  -- Author details formatted as described below
 AS
 BEGIN
+    -- =====================================================================
+    -- Procedure Name: proc_AddBook
+    -- Description: Inserts a new book into the Book table and associates it 
+    --              with its authors. Author details must be passed in a specific 
+    --              format to be processed and inserted into the Author table.
+    --
+    -- Parameters:
+    --     @Book_ISBN (VARCHAR(20)): ISBN of the book.
+    --     @Book_Title (NVARCHAR(500)): Title of the book.
+    --     @Quantity (SMALLINT): Quantity of the book.
+    --     @Publication (SMALLINT): Publication year of the book.
+    --     @Genre (VARCHAR(200)): Genre of the book.
+    --     @Book_ID (INT OUTPUT): Output parameter to return the ID of the newly 
+    --                            inserted book.
+    --     @Authors (VARCHAR(MAX)): Author details formatted as:
+    --         id1,''name1'', ''surname1'';id2,''name2'',''surname2'';...
+    --         where id is 0 to add a new author, and each field is 
+    --         separated by a comma, with double single quotes as text qualifiers.
+
+    -- Return Values:
+    --     -1: Transaction was incomplete due to an error.
+    --     1: Transaction completed successfully.
+    
+    -- Error Handling: The procedure rolls back the transaction if any error 
+    --                 occurs during the insertion of the book or authors.
+    --
+    -- Example Call: EXEC proc_AddBook 
+    --                @Book_ISBN = '1234567890123', 
+    --                @Book_Title = N'Example Book', 
+    --                @Quantity = 10, 
+    --                @Publication = 2023, 
+    --                @Genre = 'Fiction', 
+    --                @Book_ID = @OutputBookID OUTPUT, 
+    --                @Authors = '0,''John'',''Doe'';0,''Jane'',''Smith''';
+    -- =====================================================================
+
     BEGIN TRANSACTION trans1
 
         --Add the book to the book-table
@@ -29,8 +58,7 @@ BEGIN
         BEGIN
             --Rollback the changes
             ROLLBACK TRANSACTION trans1
-            SELECT 0 AS ERROR;
-            RETURN;
+            RETURN -1;
         END
 
         --SET THE BOOK ID
