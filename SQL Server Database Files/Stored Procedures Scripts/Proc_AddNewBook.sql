@@ -11,6 +11,7 @@ ALTER PROCEDURE proc_AddBook
                 @Authors            VARCHAR(MAX)  -- Author details formatted as described below
 AS
 BEGIN
+/*
     -- =====================================================================
     -- Procedure Name: proc_AddBook
     -- Description: Inserts a new book into the Book table and associates it 
@@ -45,7 +46,17 @@ BEGIN
     --                @Genre = 'Fiction', 
     --                @Book_ID = @OutputBookID OUTPUT, 
     --                @Authors = '0,''John'',''Doe'';0,''Jane'',''Smith''';
+
+    -- Example Output:
+    --     Book_ID         | Author_ID
+    --     ----------------------------
+    --          5          | 1
+    --          5          | 2
+    --
+    -- This output returns the Book_ID and Author_ID(s) of the inserted or associated authors.
+    -- The order of the author Id's is the sme as in the @Authors string
     -- =====================================================================
+*/
 
     BEGIN TRANSACTION trans1
 
@@ -150,7 +161,7 @@ BEGIN
     COMMIT TRANSACTION trans1
 
     --Return the results to the calling application
-    SELECT @Book_ISBN AS Book_ISBN, #TempAuthorsDet.ID AS Author_ID
+    SELECT @Book_ID AS Book_ID, #TempAuthorsDet.ID AS Author_ID
     FROM #TempAuthorsDet;
     
     --Clean-up
