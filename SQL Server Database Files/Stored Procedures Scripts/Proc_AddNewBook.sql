@@ -107,8 +107,8 @@ BEGIN
             BEGIN
                 --Create a new author record
                 --Here we might need to also check if we are not duplicating authors
-                INSERT INTO Author(Author_Name, Author_Surname)
-                VALUES(@AuthorName, @AuthorSurname);
+                INSERT INTO Author(Author_Name, Author_Surname, Publications)
+                VALUES(@AuthorName, @AuthorSurname, 0);
 
                 --Check if we had an error
                 IF @@ERROR <> 0
