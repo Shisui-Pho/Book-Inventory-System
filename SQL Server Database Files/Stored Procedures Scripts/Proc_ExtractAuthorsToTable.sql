@@ -52,6 +52,8 @@ BEGIN
         INSERT INTO #TempAuthors([ID], AuthorName, AuthorSurname)
         SELECT TOP 1 [ID], [Name], Surname
         FROM dbo.SplitBookInfo(@AuthorRecord);
+
+        FETCH NEXT FROM AuthorRecordCursor INTO @AuthorRecord;
     END;
 
     SELECT * FROM #TempAuthors;
