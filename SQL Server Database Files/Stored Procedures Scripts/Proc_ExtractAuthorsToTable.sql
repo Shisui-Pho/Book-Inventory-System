@@ -58,5 +58,8 @@ BEGIN
 
     SELECT * FROM #TempAuthors;
 
+    --Clean- up
+    CLOSE AuthorRecordCursor;
+    DEALLOCATE AuthorRecordCursor;
     DROP TABLE #TempAuthors;
 END;
