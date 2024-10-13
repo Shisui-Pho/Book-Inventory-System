@@ -1,6 +1,7 @@
-CREATE PROCEDURE proc_AddUpdateAuthor
+ALTER PROCEDURE proc_AddUpdateAuthor
     @AuthorName         NVARCHAR(100), 
     @AuthorSurname      NVARCHAR(100),
+    @DOB                DATE,
     @AuthorID           INT OUTPUT
 AS 
 BEGIN
@@ -17,6 +18,7 @@ BEGIN
     --     @AuthorID (INT OUTPUT): The ID of the author. If the author exists, 
     --                              it remains the same; otherwise, it is 
     --                              set to the new author's ID.
+    --     @DOB (DATE) : The date of birth of the author. The format should be 'dd/mm/yyyy'
     --
     -- Return Values:
     -- Return -1 for any caught errors
@@ -26,7 +28,8 @@ BEGIN
     --     DECLARE @AuthorID INT;
     --     EXEC proc_AddUpdateAuthor @AuthorName = N'John', 
     --                                @AuthorSurname = N'Doe', 
-    --                                @AuthorID = @AuthorID OUTPUT;
+    --                                @AuthorID = @AuthorID OUTPUT,
+    --                                @DOB      = '22/03/202454'          (This is in the format : dd/mm/yyyy)
     -- =====================================================================
     BEGIN TRY
         -- Check if the author exists
@@ -35,7 +38,8 @@ BEGIN
             -- Author exists, update the author's details
             UPDATE Author
             SET Author_Name = @AuthorName,
-                Author_Surname = @AuthorSurname
+                Author_Surname = @AuthorSurname, 
+                DOB = @DOB
             WHERE Author_ID = @AuthorID;
 
             -- Check if the update was successful
@@ -47,8 +51,8 @@ BEGIN
         ELSE
         BEGIN
             -- Author does not exist, insert a new author
-            INSERT INTO Author(Author_Name, Author_Surname)
-            VALUES(@AuthorName, @AuthorSurname);
+            INSERT INTO Author(Author_Name, Author_Surname, DOB)
+            VALUES(@AuthorName, @AuthorSurname, @DOB);
 
             -- Retrieve the new AuthorID
             SET @AuthorID = SCOPE_IDENTITY();  

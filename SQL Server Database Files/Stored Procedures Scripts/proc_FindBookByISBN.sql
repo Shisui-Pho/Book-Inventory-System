@@ -1,4 +1,4 @@
-CREATE PROCEDURE proc_FindBookByISBN
+ALTER PROCEDURE proc_FindBookByISBN
                 @BookISBN       VARCHAR(20)
 AS
 BEGIN
@@ -34,6 +34,7 @@ BEGIN
            Author.Author_ID,
            Author.Author_Name,
            Author.Author_Surname,
+           Author.DOB,
            Author.Publications AS AuthorPublications
     FROM Book
     INNER JOIN BookAuthor

@@ -1,4 +1,4 @@
-CREATE PROCEDURE pro_RemoveBook
+ALTER PROCEDURE pro_RemoveBook
                  @BookID        INT
 AS
 BEGIN

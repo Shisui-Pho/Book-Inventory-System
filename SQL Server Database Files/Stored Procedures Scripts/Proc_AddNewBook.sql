@@ -7,7 +7,6 @@ ALTER PROCEDURE proc_AddBook
                 @Genre              VARCHAR(200),
                 @Book_ID            INT OUTPUT, -- ID of the book needed on the client side
 
-
                 @Authors            VARCHAR(MAX)  -- Author details formatted as described below
 AS
 BEGIN
@@ -27,13 +26,13 @@ BEGIN
     --     @Book_ID (INT OUTPUT): Output parameter to return the ID of the newly 
     --                            inserted book.
     --     @Authors (VARCHAR(MAX)): Author details formatted as:
-    --         id1,''name1'', ''surname1'';id2,''name2'',''surname2'';...
+    --         id1,''name1'', ''surname1'',''dd/mm/yyyy'';id2,''name2'',''surname2'',''dd/mm/yyyy';...
     --         where id is 0 to add a new author, and each field is 
     --         separated by a comma, with double single quotes as text qualifiers.
 
     -- Return Values:
     --     -1: Transaction was incomplete due to an error.
-    --     1: Transaction completed successfully.
+    --      1: Transaction completed successfully.
     
     -- Error Handling: The procedure rolls back the transaction if any error 
     --                 occurs during the insertion of the book or authors.
@@ -45,7 +44,7 @@ BEGIN
     --                @Publication = 2023, 
     --                @Genre = 'Fiction', 
     --                @Book_ID = @OutputBookID OUTPUT, 
-    --                @Authors = '0,''John'',''Doe'';0,''Jane'',''Smith''';
+    --                @Authors = '0,''John'',''Doe'',''03/01/1986'';0,''Jane'',''Smith'',''04/02/1789''';
 
     -- Example Output:
     --     Book_ID         | Author_ID
@@ -75,18 +74,20 @@ BEGIN
         --SET THE BOOK ID
         SET @Book_ID = SCOPE_IDENTITY();
 
-     --Create a tempory author table for authors
+        --Create a tempory author table for authors
         CREATE TABLE #TempAuthorsDet 
         (
             [ID] INT,
             AuthorName         NVARCHAR(150),
-            AuthorSurname      NVARCHAR(150)
+            AuthorSurname      NVARCHAR(150),
+            DOB                DATE
         );
 
         --Temporary variable for the author details for the cursor
         DECLARE @AuthorID       INT,
                 @AuthorName     NVARCHAR(100),
-                @AuthorSurname  NVARCHAR(100);
+                @AuthorSurname  NVARCHAR(100),
+                @DOB            DATE;
 
         
         INSERT INTO #TempAuthorsDet(ID, AuthorName, AuthorSurname)
@@ -97,18 +98,29 @@ BEGIN
         SELECT * FROM #TempAuthorsDet; 
 
         OPEN Author_Cursor;
-        FETCH NEXT FROM Author_Cursor INTO @AuthorID, @AuthorName, @AuthorSurname;
+        FETCH NEXT FROM Author_Cursor INTO @AuthorID, @AuthorName, @AuthorSurname, @DOB;
 
         WHILE @@FETCH_STATUS = 0
         BEGIN
 
-            --Check if the author exists
+                --Here we might need to also check if we are not duplicating authors(autho)
+                --Check if an author with the same names exists
+            SET @AuthorID = (SELECT Author_ID FROM Author WHERE Author_Name = @AuthorName AND Author_Surname = @AuthorSurname AND DOB = @DOB);
+
+            IF @AuthorID IS NOT NULL
+            BEGIN
+                --UPDATE THE TEMPORARY TABLE
+                UPDATE #TempAuthorsDet SET [ID] = @AuthorID
+                WHERE AuthorName = @AuthorName
+                AND   AuthorSurname = @AuthorSurname
+                AND DOB = @DOB;
+            END
+            --Check if the author exists(by id)
             IF NOT EXISTS (SELECT Author_Name FROM Author WHERE Author_ID = @AuthorID)
             BEGIN
                 --Create a new author record
-                --Here we might need to also check if we are not duplicating authors
-                INSERT INTO Author(Author_Name, Author_Surname, Publications)
-                VALUES(@AuthorName, @AuthorSurname, 0);
+                INSERT INTO Author(Author_Name, Author_Surname, Publications, DOB)
+                VALUES(@AuthorName, @AuthorSurname, 0, @DOB);
 
                 --Check if we had an error
                 IF @@ERROR <> 0
@@ -129,7 +141,8 @@ BEGIN
                 SET ID = SCOPE_IDENTITY()
                 WHERE ID = @AuthorID 
                 AND   AuthorName = @AuthorName
-                AND   AuthorSurname = @AuthorSurname;
+                AND   AuthorSurname = @AuthorSurname
+                AND   DOB = @DOB;
                 
                 --Set the ID to the last generates ID
                 SET @AuthorID = SCOPE_IDENTITY()
@@ -155,7 +168,7 @@ BEGIN
             END
 
             --Fetch the next record
-            FETCH NEXT FROM Author_Cursor INTO @AuthorID, @AuthorName, @AuthorSurname;
+            FETCH NEXT FROM Author_Cursor INTO @AuthorID, @AuthorName, @AuthorSurname, @DOB;
         END
     --Commit changes
     COMMIT TRANSACTION trans1

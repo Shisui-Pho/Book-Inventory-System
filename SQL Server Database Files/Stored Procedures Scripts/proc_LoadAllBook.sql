@@ -1,4 +1,4 @@
-CREATE PROCEDURE proc_LoadAllBook
+ALTER PROCEDURE proc_LoadAllBook
 AS
 BEGIN
 -- =====================================================================
@@ -36,6 +36,7 @@ BEGIN
        Author.Author_ID,
        Author.Author_Name,
        Author.Author_Surname,
+       Author.DOB,
        Author.Publications AS AuthorPublications
     FROM Book
     INNER JOIN BookAuthor

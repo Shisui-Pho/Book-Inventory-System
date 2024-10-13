@@ -52,7 +52,8 @@ BEGIN
     (
         [ID] INT,
         AuthorName         NVARCHAR(150),
-        AuthorSurname      NVARCHAR(150)
+        AuthorSurname      NVARCHAR(150), 
+        DOB                DATE
     );
 
     --First update the book table
@@ -84,7 +85,7 @@ BEGIN
     END
 
     --Extract the authors string and add them to the temporary table
-    INSERT INTO #TempAuthorsDet(ID, AuthorName, AuthorSurname)
+    INSERT INTO #TempAuthorsDet(ID, AuthorName, AuthorSurname, DOB)
     EXEC dbo.helper_proc_ExtractAuthorsToTable @Authors;
 
     IF @@ERROR <> 0
