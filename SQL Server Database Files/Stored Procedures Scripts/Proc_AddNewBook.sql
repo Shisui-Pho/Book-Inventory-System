@@ -26,9 +26,10 @@ BEGIN
     --     @Book_ID (INT OUTPUT): Output parameter to return the ID of the newly 
     --                            inserted book.
     --     @Authors (VARCHAR(MAX)): Author details formatted as:
-    --         id1,''name1'', ''surname1'',''dd/mm/yyyy'';id2,''name2'',''surname2'',''dd/mm/yyyy';...
+    --         id1,''name1'', ''surname1'','dob1';id2,''name2'',''surname2'',''dob2'';...
     --         where id is 0 to add a new author, and each field is 
     --         separated by a comma, with double single quotes as text qualifiers.
+               --Note: The date is formatted as follows: yyyy/mm/dd
 
     -- Return Values:
     --     -1: Transaction was incomplete due to an error.
@@ -44,7 +45,7 @@ BEGIN
     --                @Publication = 2023, 
     --                @Genre = 'Fiction', 
     --                @Book_ID = @OutputBookID OUTPUT, 
-    --                @Authors = '0,''John'',''Doe'',''03/01/1986'';0,''Jane'',''Smith'',''04/02/1789''';
+    --                @Authors = '0,''John'',''Doe'',''1986/01/03'';0,''Jane'',''Smith'',''1667/03/01''';
 
     -- Example Output:
     --     Book_ID         | Author_ID
@@ -87,10 +88,11 @@ BEGIN
         DECLARE @AuthorID       INT,
                 @AuthorName     NVARCHAR(100),
                 @AuthorSurname  NVARCHAR(100),
-                @DOB            DATE;
+                @DOB            DATE, 
+                @AuthorID_test  INT; --This will be used to check if an author with the same name exists
 
         
-        INSERT INTO #TempAuthorsDet(ID, AuthorName, AuthorSurname)
+        INSERT INTO #TempAuthorsDet(ID, AuthorName, AuthorSurname, DOB)
         EXEC helper_proc_ExtractAuthorsToTable @Authors; --Insert the data of the other procedure to the temporary table
 
         --Create a cursor to loop through all the authors in the table
@@ -103,14 +105,15 @@ BEGIN
         WHILE @@FETCH_STATUS = 0
         BEGIN
 
-                --Here we might need to also check if we are not duplicating authors(autho)
-                --Check if an author with the same names exists
-            SET @AuthorID = (SELECT Author_ID FROM Author WHERE Author_Name = @AuthorName AND Author_Surname = @AuthorSurname AND DOB = @DOB);
+            --Here we might need to also check if we are not duplicating authors(autho)
+            --Check if an author with the same names exists
+            SET @AuthorID_test = (SELECT Author_ID FROM Author WHERE Author_Name = @AuthorName AND Author_Surname = @AuthorSurname AND DOB = @DOB);
 
-            IF @AuthorID IS NOT NULL
+            IF @AuthorID_test IS NOT NULL
             BEGIN
                 --UPDATE THE TEMPORARY TABLE
-                UPDATE #TempAuthorsDet SET [ID] = @AuthorID
+                UPDATE #TempAuthorsDet 
+                SET [ID] = @AuthorID_test
                 WHERE AuthorName = @AuthorName
                 AND   AuthorSurname = @AuthorSurname
                 AND DOB = @DOB;

@@ -11,7 +11,7 @@ BEGIN
     --
     --Parameters:
     --    @Authors (VARCHAR(MAX)): A string containing author records formatted as:
-    --             id1,''name1'', ''surname1'',''dd/mm/yyyy'';id2,''name2'',''surname2'',''dd/mm/yyyy';...
+    --             id1,''name1'', ''surname1'',''yyyy/mm/dd'';id2,''name2'',''surname2'',''yyyy/mm/dd';...
     --             Each author record should be separated by a semicolon (;).
     -- 
     --Return Values: 
@@ -20,7 +20,7 @@ BEGIN
     --
     --Example Call: 
     --    EXEC helper_proc_ExtractAuthorsToTable 
-    --        @Authors = '0,''John'',''Doe'',''03/01/1986'';0,''Jane'',''Smith'',''04/02/1789''';
+    --        @Authors = '0,''John'',''Doe'',''1986/12/15'';0,''Jane'',''Smith'',''1761/12/25''';
     --
     --Note: This procedure uses the STRING_SPLIT function available in SQL Server 
     --      for breaking the input string into records.
@@ -32,15 +32,9 @@ BEGIN
          [ID] INT,
          AuthorName         NVARCHAR(150),
          AuthorSurname      NVARCHAR(150),
-         DOB                DATE
+         DateOfBirth                DATE
     );
-
-    DECLARE @AuthorRecord   VARCHAR(255),
-            @AuthorID       INT,
-            @AuthorName     NVARCHAR(100),
-            @AuthorSurname  NVARCHAR(100),
-            @DOB            DATE;
-
+    DECLARE @AuthorRecord   NVARCHAR(300);
     --Create a curso that will go through the author records
     DECLARE AuthorRecordCursor CURSOR FOR
     SELECT VALUE FROM STRING_SPLIT(@Authors, ';') WHERE VALUE <> '';  -- Break the string into records
@@ -51,7 +45,7 @@ BEGIN
     WHILE @@FETCH_STATUS = 0
     BEGIN
         --Split the record and extract the output results using the function
-        INSERT INTO #TempAuthors([ID], AuthorName, AuthorSurname, DOB)
+        INSERT INTO #TempAuthors([ID], AuthorName, AuthorSurname, DateOfBirth)
         SELECT TOP 1 [ID], [Name], Surname, DOB
         FROM dbo.SplitBookInfo(@AuthorRecord);
 

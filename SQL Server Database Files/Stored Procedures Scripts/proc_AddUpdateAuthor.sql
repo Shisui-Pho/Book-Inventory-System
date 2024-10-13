@@ -18,7 +18,7 @@ BEGIN
     --     @AuthorID (INT OUTPUT): The ID of the author. If the author exists, 
     --                              it remains the same; otherwise, it is 
     --                              set to the new author's ID.
-    --     @DOB (DATE) : The date of birth of the author. The format should be 'dd/mm/yyyy'
+    --     @DOB (DATE) : The date of birth of the author. The format should be 'yyyy/mm/dd'
     --
     -- Return Values:
     -- Return -1 for any caught errors
@@ -29,7 +29,7 @@ BEGIN
     --     EXEC proc_AddUpdateAuthor @AuthorName = N'John', 
     --                                @AuthorSurname = N'Doe', 
     --                                @AuthorID = @AuthorID OUTPUT,
-    --                                @DOB      = '22/03/202454'          (This is in the format : dd/mm/yyyy)
+    --                                @DOB      = '1967/11/23'          (This is in the format : yyyy/mm/dd)
     -- =====================================================================
     BEGIN TRY
         -- Check if the author exists
