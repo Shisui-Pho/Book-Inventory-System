@@ -41,9 +41,11 @@ BEGIN
     --       EXEC proc_FilterBook @AuthorName = 'J.K.', @AuthorSurname = 'owling', @MustContainValues = 0;
     -- =====================================================================
 */
-
     --The default values should all be null
-    DECLARE @Sql          VARCHAR(MAX);
+    DECLARE @Sql          VARCHAR(MAX),
+            @BracketAdded BIT;
+
+    SET @BracketAdded = 0;
 
     SET @Sql = 'SELECT Book.Book_ID, 
                     Book.Book_ISBN, 
@@ -57,54 +59,75 @@ BEGIN
                     Author.DOB, 
                     Author.Publications AS AuthorPublications 
                 FROM Book   
-                INNER JOIN BookAuthor ON 5 = 5 ';--Add a default statement for the filter criteria, this will allow for filtering before joining other tables
+                INNER JOIN BookAuthor ON BookAuthor.Book_ID = Book.Book_ID 
+                INNER JOIN Author ON BookAuthor.Author_ID = Author.Author_ID 
+                WHERE 1 =1 ';--Add a default statement for the filter criteria, this will allow for filtering before joining other tables
                                                  --    and also for future extension of the ceode(adding new filtering conditions)
-
-    --Start building a dynamic sql
+-- Initialize a flag to determine if any filters have been added
+    DECLARE @FilterAdded BIT = 0;
 
     IF(@Book_Title IS NOT NULL)
     BEGIN
-        IF @MustContainValues = 1 --True
+        IF @MustContainValues = 1
             SET @Sql = @Sql + ' AND Book.Book_Title LIKE ''%' + @Book_Title + '%''';
         ELSE
-            SET @Sql = @Sql + ' OR Book.Book_Title LIKE ''' + @Book_Title + '%''';
+        BEGIN
+            SET @Sql = @Sql + ' AND (Book.Book_Title LIKE ''' + @Book_Title + '%''';
+            SET @FilterAdded = 1;
+        END
     END
 
     IF(@Genre IS NOT NULL)
     BEGIN
-        IF @MustContainValues = 1 --True
+        IF @MustContainValues = 1
             SET @Sql = @Sql + ' AND Genre LIKE ''%' + @Genre + '%''';
         ELSE
         BEGIN
-            SET @Sql = @Sql + ' OR Genre LIKE ''%' + @Genre + '%''';
+            IF @FilterAdded = 1
+                SET @Sql = @Sql + ' OR Genre LIKE ''' + @Genre + '%''';
+            ELSE
+            BEGIN
+                SET @Sql = @Sql + ' AND ( Genre LIKE ''' + @Genre + '%''';
+                SET @FilterAdded = 1;
+            END
         END
     END
 
-    --Link the BookAuthor and Author table
-    SET @Sql = @Sql + ' AND BookAuthor.Book_ID = Book.Book_ID 
-                        INNER JOIN Author ON 5 = 5 ';
-
     IF(@AuthorName IS NOT NULL)
     BEGIN
-        IF @MustContainValues = 1 --True
+        IF @MustContainValues = 1
             SET @Sql = @Sql + ' AND Author.Author_Name LIKE ''%' + @AuthorName + '%''';
         ELSE
-            SET @Sql = @Sql + ' OR Author.Author_Name LIKE ''%' + @AuthorName + '%''';
+        BEGIN
+            IF @FilterAdded = 1
+                SET @Sql = @Sql + ' OR Author.Author_Name LIKE ''' + @AuthorName + '%''';
+            ELSE
+            BEGIN
+                SET @Sql = @Sql + ' AND ( Author.Author_Name LIKE ''' + @AuthorName + '%''';
+                SET @FilterAdded = 1;
+            END
+        END
     END
 
     IF(@AuthorSurname IS NOT NULL)
     BEGIN
-        IF @MustContainValues = 1 --True
+        IF @MustContainValues = 1
             SET @Sql = @Sql + ' AND Author.Author_Surname LIKE ''%' + @AuthorSurname + '%''';
         ELSE
         BEGIN
-            SET @Sql = @Sql + ' OR Author.Author_Surname LIKE ''%' + @AuthorSurname + '%''';
+            IF @FilterAdded = 1
+                SET @Sql = @Sql + ' OR Author.Author_Surname LIKE ''' + @AuthorSurname + '%''';
+            ELSE
+            BEGIN
+                SET @Sql = @Sql + ' AND ( Author.Author_Surname LIKE ''' + @AuthorSurname + '%''';
+                SET @FilterAdded = 1;
+            END
         END
     END
 
-    SET @Sql = @Sql + ' AND Author.Author_ID = BookAuthor.Author_ID ';
+    -- Close the grouping if any OR conditions were added
+    IF @FilterAdded = 1
+        SET @Sql = @Sql + ' )'; 
 
-    --Execute the dynamic sql
     EXEC(@Sql);
-    
 END;
