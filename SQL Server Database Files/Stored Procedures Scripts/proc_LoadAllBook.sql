@@ -1,4 +1,4 @@
-ALTER PROCEDURE proc_LoadAllBook
+CREATE PROCEDURE proc_LoadAllBooks
 AS
 BEGIN
 -- =====================================================================
