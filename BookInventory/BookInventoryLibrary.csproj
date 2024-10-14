@@ -59,7 +59,6 @@
     <Compile Include="Factory\ICreationResult.cs" />
     <Compile Include="Models\Author.cs" />
     <Compile Include="Models\Book.cs" />
-    <Compile Include="Data\AccessDB\AccessBookRepository.cs" />
     <Compile Include="Utilities\Custom Logging\ExceptionLogger.cs" />
     <Compile Include="Data\AccessDB\AccessDatabaseService.cs" />
     <Compile Include="Interfaces\IAuthor.cs" />
