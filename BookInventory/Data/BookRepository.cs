@@ -4,7 +4,7 @@
 
 using System;
 using System.Collections.Generic;
-namespace BookInventory.Data
+namespace BookInventory
 {
     internal class BookRepository : IBookRepository
     {
