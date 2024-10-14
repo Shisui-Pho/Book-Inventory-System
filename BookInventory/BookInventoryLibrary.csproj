@@ -46,6 +46,7 @@
     <Compile Include="Data\AccessDB\AccessBookRepositoryCommands\LoadingBooksCommand.cs" />
     <Compile Include="Data\AccessDB\AccessBookRepositoryCommands\RemoveBookCommand.cs" />
     <Compile Include="Data\AccessDB\AccessBookRepositoryCommands\UpdateBookCommand.cs" />
+    <Compile Include="Data\SQLServerDB\SQLServerBookRepository.cs" />
     <Compile Include="Data\SQLServerDB\SQLServerDatabaseService.cs" />
     <Compile Include="Factory\AuthorFactory.cs" />
     <Compile Include="Factory\BookFactory.cs" />
