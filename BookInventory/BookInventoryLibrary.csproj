@@ -41,12 +41,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\AccessDB\AccessBookRepositoryCommands\AccessAuthorRepository.cs" />
-    <Compile Include="Data\AccessDB\AccessBookRepositoryCommands\AccessAddCommand.cs" />
-    <Compile Include="Data\AccessDB\AccessBookRepositoryCommands\AccessFilterCommand.cs" />
-    <Compile Include="Data\AccessDB\AccessBookRepositoryCommands\AccessLoadCommand.cs" />
-    <Compile Include="Data\AccessDB\AccessBookRepositoryCommands\AccessRemoveCommand.cs" />
-    <Compile Include="Data\AccessDB\AccessBookRepositoryCommands\AccessUpdateCommand.cs" />
+    <Compile Include="Data\AccessDB\AccessCommands\AccessAuthorRepository.cs" />
+    <Compile Include="Data\AccessDB\AccessCommands\AccessAddCommand.cs" />
+    <Compile Include="Data\AccessDB\AccessCommands\AccessFilterCommand.cs" />
+    <Compile Include="Data\AccessDB\AccessCommands\AccessLoadCommand.cs" />
+    <Compile Include="Data\AccessDB\AccessCommands\AccessRemoveCommand.cs" />
+    <Compile Include="Data\AccessDB\AccessCommands\AccessUpdateCommand.cs" />
     <Compile Include="Data\BookRepository.cs" />
     <Compile Include="Data\ICommands Interfaces.cs" />
     <Compile Include="Data\SQLServerDB\SQLServerBookRepository.cs" />
@@ -68,6 +68,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\ISBNFormatterService.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Data\SQLServerDB\NewFolder1\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
