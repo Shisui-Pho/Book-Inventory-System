@@ -1,14 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿/*
+ *  This file contains the Book repository class that performs all the CRUD operation using the different commands
+ */
 
+using System;
+using System.Collections.Generic;
 namespace BookInventory.Data
 {
     internal class BookRepository : IBookRepository
     {
         //This are the commands that are going to be used
+        //-This commands are lightweight as they only have the database service object only in them
         private readonly IAddBookCommand cmdAddBook;
         private readonly ILoadingBooks cmdBookLoading;
         private readonly IFilterBooks cmdFiltering;
