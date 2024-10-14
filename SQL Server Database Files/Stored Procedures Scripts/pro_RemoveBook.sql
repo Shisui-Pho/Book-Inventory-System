@@ -2,6 +2,41 @@ ALTER PROCEDURE pro_RemoveBook
                  @BookID        INT
 AS
 BEGIN
+    -- =====================================================================
+    -- Procedure Name: pro_RemoveBook
+    -- Description: Removes a book from the `Book` table based on the 
+    --              provided `BookID`. It also removes the associated 
+    --              book-author relationships from the `BookAuthor` table.
+    -- 
+    -- Logic:
+    --    - Check if the book exists in the `Book` table using the provided 
+    --      `BookID`. If it exists, proceed with deletion.
+    --    - First, delete the corresponding entries from the `BookAuthor` 
+    --      table to maintain referential integrity.
+    --    - Then, delete the book itself from the `Book` table.
+    --    - The procedure uses a transaction to ensure atomicity. If any 
+    --      error occurs, the transaction is rolled back and the procedure 
+    --      returns `-1`.
+    --    - If the deletions are successful, the transaction is committed 
+    --      and the procedure returns `1`.
+    --
+    -- Parameters:
+    --    @BookID (INT): The ID of the book to be removed.
+    --
+    -- Return Values:
+    --    - Returns 1 if the operation is successful.
+    --    - Returns -1 if an error occurs during the operation.
+    --
+    -- Example Call:
+    --    DECLARE @Result INT;
+    --    EXEC @Result = pro_RemoveBook @BookID = 123;
+    --
+    --    IF @Result = 1
+    --        PRINT 'Book successfully removed.';
+    --    ELSE
+    --        PRINT 'Failed to remove the book.';
+    -- =====================================================================
+
     -- Start a database transaction
     BEGIN TRANSACTION 
 
