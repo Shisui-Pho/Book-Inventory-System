@@ -50,6 +50,11 @@
     <Compile Include="Data\BookRepository.cs" />
     <Compile Include="Data\ICommands Interfaces.cs" />
     <Compile Include="Data\SQLServerDB\SQLServerBookRepository.cs" />
+    <Compile Include="Data\SQLServerDB\SQLServerCommands\SQLLoadingCommand.cs" />
+    <Compile Include="Data\SQLServerDB\SQLServerCommands\SQLServerAddCommand.cs" />
+    <Compile Include="Data\SQLServerDB\SQLServerCommands\SQLServerFilterCommand.cs" />
+    <Compile Include="Data\SQLServerDB\SQLServerCommands\SQLServerRemoveCommand.cs" />
+    <Compile Include="Data\SQLServerDB\SQLServerCommands\SQLServerUpdateCommand.cs" />
     <Compile Include="Data\SQLServerDB\SQLServerDatabaseService.cs" />
     <Compile Include="Factory\AuthorFactory.cs" />
     <Compile Include="Factory\BookFactory.cs" />
@@ -68,8 +73,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\ISBNFormatterService.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Data\SQLServerDB\NewFolder1\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
