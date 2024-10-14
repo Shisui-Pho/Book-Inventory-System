@@ -47,7 +47,7 @@ BEGIN
         --Split the record and extract the output results using the function
         INSERT INTO #TempAuthors([ID], AuthorName, AuthorSurname, DateOfBirth)
         SELECT TOP 1 [ID], [Name], Surname, DOB
-        FROM dbo.SplitBookInfo(@AuthorRecord);
+        FROM dbo.func_SplitAuthorInfo(@AuthorRecord);
 
         FETCH NEXT FROM AuthorRecordCursor INTO @AuthorRecord;
     END;

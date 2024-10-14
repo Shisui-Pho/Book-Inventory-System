@@ -3,7 +3,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-ALTER FUNCTION [dbo].[SplitBookInfo]
+CREATE FUNCTION [dbo].[func_SplitAuthorInfo]
 (
     @InputString VARCHAR(100)  -- The input string containing the ID, name, surname, and DOB
 )
