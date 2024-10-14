@@ -31,9 +31,6 @@ BEGIN
     --         separated by a comma, with double single quotes as text qualifiers.
                --Note: The date is formatted as follows: yyyy/mm/dd
 
-    -- Return Values:
-    --     -1: Transaction was incomplete due to an error.
-    --      1: Transaction completed successfully.
     
     -- Error Handling: The procedure rolls back the transaction if any error 
     --                 occurs during the insertion of the book or authors.
@@ -69,7 +66,8 @@ BEGIN
         BEGIN
             --Rollback the changes
             ROLLBACK TRANSACTION trans1
-            RETURN -1;
+            SET @Book_ID = NULL;
+            RETURN;
         END
 
         --SET THE BOOK ID
@@ -134,7 +132,7 @@ BEGIN
                 
                     -- Rollback and return
                     ROLLBACK TRANSACTION trans1;
-                    SELECT 0 AS ERROR;
+                    SET @Book_ID = NULL;
                     RETURN;
                 END
 
@@ -166,7 +164,7 @@ BEGIN
             
                 -- Rollback and return
                 ROLLBACK TRANSACTION trans1;
-                SELECT 0 AS ERROR;
+                SET @Book_ID = NULL;
                 RETURN;
             END
 
