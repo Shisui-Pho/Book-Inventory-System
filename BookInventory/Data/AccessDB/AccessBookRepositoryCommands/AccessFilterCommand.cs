@@ -13,23 +13,23 @@ namespace BookInventory
     {
         private readonly IDatabaseService _dbService;
 
-        //-The GetAuthors Method sits in the BookRepository class
-        private readonly delLoadAuthors GetAuthors;
-        public AccessFilterCommand(IDatabaseService dbService, delLoadAuthors getAuthors)
+        public AccessFilterCommand(IDatabaseService dbService)
         {
             this._dbService = dbService;
-            this.GetAuthors = getAuthors;
         }//ctor main
 
         public IEnumerable<IBook> FilterBooks(Predicate<IBook> predicate)
         {
-            AccessLoadCommand cmd = new AccessLoadCommand(_dbService, GetAuthors);
+            AccessLoadCommand cmd = new AccessLoadCommand(_dbService);
             foreach (IBook book in cmd.LoadAllBooks())
                 if (predicate(book))
                     yield return book;
         }//FilterBooks
         public IEnumerable<IBook> FilterBooks(string authorName, string genre, string title , int? release)
         {
+            //Create the author repository for retrieving the authors
+            AccessAuthorRepository authorsRepository = new AccessAuthorRepository(_dbService);
+
             List<IBook> books = new List<IBook>();
             string _sql = BuildSql(authorName, genre, title, release);
             try
@@ -50,7 +50,7 @@ namespace BookInventory
                     int publication = int.Parse(rd["PublicationYear"].ToString());
 
                     //Get the book authors
-                    IEnumerable<IAuthor> authors = GetAuthors(bookid);
+                    IEnumerable<IAuthor> authors = authorsRepository.GetAuthors(bookid);
 
                     #warning Still need to deal with invalid input/data
                     //For now we assume that the data retrieved from the database is valid

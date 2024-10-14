@@ -12,16 +12,16 @@ namespace BookInventory
     {
         private readonly IDatabaseService _dbService;
 
-        //-The GetAuthors Method sits in the BookRepository class
-        private readonly delLoadAuthors GetAuthors;
-        public AccessLoadCommand(IDatabaseService databaseService, delLoadAuthors getAuthors)
+
+        public AccessLoadCommand(IDatabaseService databaseService)
         {
             this._dbService = databaseService;
-            this.GetAuthors = getAuthors;
         }//ctor main
 
         public IEnumerable<IBook> LoadAllBooks()
         {
+            //Create the author's repository for loading authors
+            AccessAuthorRepository authorsRepository = new AccessAuthorRepository(_dbService);
             List<IBook> books = new List<IBook>();
             try
             {
@@ -44,7 +44,7 @@ namespace BookInventory
                     int publication = int.Parse(rd["PublicationYear"].ToString());
 
                     //Get the book authors
-                    IEnumerable<IAuthor> authors = GetAuthors(bookid);
+                    IEnumerable<IAuthor> authors = authorsRepository.GetAuthors(bookid);
 
                     #warning Still need to deal with invalid input/data
                     //For now we assume that the data retrieved from the database is valid
@@ -72,6 +72,9 @@ namespace BookInventory
         }//LoadAllBooks
         public IBook FindBookByISBN(string isbn)
         {
+            //Create the author's repository for loading authors
+            AccessAuthorRepository authorsRepository = new AccessAuthorRepository(_dbService);
+
             IBook book = null;
             try
             {
@@ -93,7 +96,7 @@ namespace BookInventory
                     int bookid = int.Parse(rd["Book_ID"].ToString());
 
                     //Get the book authors and their information
-                    IEnumerable<IAuthor> authors = GetAuthors(bookid);
+                    IEnumerable<IAuthor> authors = authorsRepository.GetAuthors(bookid);
 
 
                     #warning Still need to deal with invalid input/data

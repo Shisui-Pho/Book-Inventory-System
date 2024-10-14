@@ -11,15 +11,15 @@ namespace BookInventory
     {
         private readonly IDatabaseService _dbService;
 
-        //-The AddAuthors Method sits in the BookRepository class
-        private readonly delAddAuthors AddAuthors;
-        public AccessUpdateCommand(IDatabaseService dbService, delAddAuthors addAuthors)
+        public AccessUpdateCommand(IDatabaseService dbService)
         {
             this._dbService = dbService;
-            this.AddAuthors = addAuthors;
         }//CTOR 
         public bool UpdateBook(IBook book)
         {
+            //Create the author's repository for updating authors
+            AccessAuthorRepository authorsRepository = new AccessAuthorRepository(_dbService);
+
             IDbTransaction trans = null;
             bool isTransactionComplete = false;
             try
@@ -45,7 +45,7 @@ namespace BookInventory
                 if (status == 0)
                     return isTransactionComplete;
                 //Also check the authors
-                isTransactionComplete = AddAuthors(book, trans);
+                isTransactionComplete = authorsRepository.AddAuthors(book, trans);
 
                 if (isTransactionComplete)
                     trans.Commit();
