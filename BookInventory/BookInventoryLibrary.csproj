@@ -41,11 +41,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AccessBookRepositoryCommands\AddingBookCommand.cs" />
-    <Compile Include="AccessBookRepositoryCommands\RemoveBookCommand.cs" />
-    <Compile Include="AccessBookRepositoryCommands\FilterBooksCommand.cs" />
-    <Compile Include="AccessBookRepositoryCommands\LoadingBooksCommand.cs" />
-    <Compile Include="AccessBookRepositoryCommands\UpdateBookCommand.cs" />
+    <Compile Include="Data\AccessDB\AccessBookRepositoryCommands\AddingBookCommand.cs" />
+    <Compile Include="Data\AccessDB\AccessBookRepositoryCommands\RemoveBookCommand.cs" />
+    <Compile Include="Data\AccessDB\AccessBookRepositoryCommands\FilterBooksCommand.cs" />
+    <Compile Include="Data\AccessDB\AccessBookRepositoryCommands\LoadingBooksCommand.cs" />
+    <Compile Include="Data\AccessDB\AccessBookRepositoryCommands\UpdateBookCommand.cs" />
     <Compile Include="Factory\AuthorFactory.cs" />
     <Compile Include="Factory\BookFactory.cs" />
     <Compile Include="Factory\BookRepositoryFactory.cs" />
@@ -54,9 +54,9 @@
     <Compile Include="Factory\ICreationResult.cs" />
     <Compile Include="Models\Author.cs" />
     <Compile Include="Models\Book.cs" />
-    <Compile Include="Data\AccessBookRepository.cs" />
+    <Compile Include="Data\AccessDB\AccessBookRepository.cs" />
     <Compile Include="Utilities\Custom Logging\ExceptionLogger.cs" />
-    <Compile Include="Data\AccessDatabaseService.cs" />
+    <Compile Include="Data\AccessDB\AccessDatabaseService.cs" />
     <Compile Include="Interfaces\IAuthor.cs" />
     <Compile Include="Interfaces\IBook.cs" />
     <Compile Include="Data\IBookRepository.cs" />
@@ -64,6 +64,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\ISBNFormatterService.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Data\SQL ServerDB\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
