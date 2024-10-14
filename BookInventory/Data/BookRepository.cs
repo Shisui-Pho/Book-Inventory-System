@@ -11,14 +11,14 @@ namespace BookInventory.Data
         //This are the commands that are going to be used
         //-This commands are lightweight as they only have the database service object only in them
         private readonly IAddBookCommand cmdAddBook;
-        private readonly ILoadingBooks cmdBookLoading;
-        private readonly IFilterBooks cmdFiltering;
-        private readonly IRemoveBook cmdRemoveBook;
-        private readonly IUpdateBook cmdUpdatedBook;
+        private readonly ILoadingBooksCommand cmdBookLoading;
+        private readonly IFilterBooksCommand cmdFiltering;
+        private readonly IRemoveBookCommand cmdRemoveBook;
+        private readonly IUpdateBookCommand cmdUpdatedBook;
 
         //Inject all the dependencies in the contructor
-        public BookRepository(IAddBookCommand cmAdd, ILoadingBooks cmLoad, IFilterBooks cmFilt, 
-                              IRemoveBook cmRem, IUpdateBook cmUpd)
+        public BookRepository(IAddBookCommand cmAdd, ILoadingBooksCommand cmLoad, IFilterBooksCommand cmFilt, 
+                              IRemoveBookCommand cmRem, IUpdateBookCommand cmUpd)
         {
             this.cmdAddBook = cmAdd;
             this.cmdBookLoading = cmLoad;

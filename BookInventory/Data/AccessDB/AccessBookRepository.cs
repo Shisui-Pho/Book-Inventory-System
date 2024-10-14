@@ -51,7 +51,7 @@ namespace BookInventory
             AccessLoadCommand cmd = new AccessLoadCommand(_dbService, GetAuthors);
 
             //Execute the command and return the book
-            return cmd.FindByISBN(isbn);
+            return cmd.FindBookByISBN(isbn);
         }//FindByISBN
         public IEnumerable<IBook> LoadAllBooks()
         {

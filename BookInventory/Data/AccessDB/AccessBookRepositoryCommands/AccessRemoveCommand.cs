@@ -7,7 +7,7 @@ using System.Data.OleDb;
 
 namespace BookInventory
 {
-    internal class AccessRemoveCommand
+    internal class AccessRemoveCommand : IRemoveBookCommand
     {
         private readonly IDatabaseService _dbService;
         public AccessRemoveCommand(IDatabaseService dbService)

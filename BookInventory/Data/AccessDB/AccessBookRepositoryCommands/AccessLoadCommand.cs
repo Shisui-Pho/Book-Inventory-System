@@ -8,7 +8,7 @@ using System.Data.OleDb;
 
 namespace BookInventory
 {
-    internal class AccessLoadCommand
+    internal class AccessLoadCommand : ILoadingBooksCommand
     {
         private readonly IDatabaseService _dbService;
 
@@ -70,7 +70,7 @@ namespace BookInventory
             }
             return books;
         }//LoadAllBooks
-        public IBook FindByISBN(string isbn)
+        public IBook FindBookByISBN(string isbn)
         {
             IBook book = null;
             try

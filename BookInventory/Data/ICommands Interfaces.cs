@@ -4,26 +4,26 @@
 using System;
 using System.Collections.Generic;
 
-namespace BookInventory.Data
+namespace BookInventory
 {
     public interface IAddBookCommand
     {
         bool AddBook(IBook book);
     }//IAddBookCommand
-    public interface IRemoveBook
+    public interface IRemoveBookCommand
     {
         bool RemoveBook(IBook book);
     }//IRemoveBook
-    public interface IUpdateBook
+    public interface IUpdateBookCommand
     {
         bool UpdateBook(IBook book);
     }//IUpdateBook
-    public interface ILoadingBooks
+    public interface ILoadingBooksCommand
     {
         IEnumerable<IBook> LoadAllBooks();
         IBook FindBookByISBN(string isbn);
     }//ILoadingBook
-    public interface IFilterBooks
+    public interface IFilterBooksCommand
     {
         IEnumerable<IBook> FilterBooks(Predicate<IBook> predicate);
         IEnumerable<IBook> FilterBooks(string authorName, string genre, string title, int? release);

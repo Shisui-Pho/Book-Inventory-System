@@ -7,7 +7,7 @@ using System.Data.OleDb;
 
 namespace BookInventory
 {
-    internal class AccessAddCommand
+    internal class AccessAddCommand : IAddBookCommand
     {
         private readonly IDatabaseService _dbService;
 

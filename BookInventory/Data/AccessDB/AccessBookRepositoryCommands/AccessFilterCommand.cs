@@ -9,7 +9,7 @@ using System.Data.OleDb;
 
 namespace BookInventory
 {
-    internal class AccessFilterCommand
+    internal class AccessFilterCommand : IFilterBooksCommand
     {
         private readonly IDatabaseService _dbService;
 
