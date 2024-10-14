@@ -1,6 +1,8 @@
 ﻿/*
  * This file contains the class that will handle the author creation and handle the validation
  */
+using System;
+
 namespace BookInventory
 {
     public class AuthorFactory
@@ -11,7 +13,7 @@ namespace BookInventory
         /// <param name="name">The first name of the author.</param>
         /// <param name="surname">The surname of the author.</param>
         /// <returns>ICreationResult containing either the created author or an error message.</returns>
-        public static ICreationResult<IAuthor> CreateAuthor(string name, string surname)
+        public static ICreationResult<IAuthor> CreateAuthor(string name, string surname, DateTime dob = default)
         {
             // Validate name
             if (string.IsNullOrWhiteSpace(name))
@@ -22,7 +24,7 @@ namespace BookInventory
                 return new CreationResult<IAuthor>("Author's surname cannot be empty or whitespace.", null, false);
 
             // Create the author
-            IAuthor author = new Author(name, surname);
+            IAuthor author = new Author(name, surname, dob);
             
             return new CreationResult<IAuthor>("Author created successfully.", author, true);
         }//namespace
@@ -35,9 +37,9 @@ namespace BookInventory
         /// <returns>
         /// An ICreationResult containing either the created author or an error message.
         /// </returns>
-        internal static ICreationResult<IAuthor> CreateAuthor(string name, string surname, int numberOfPublication)
+        internal static ICreationResult<IAuthor> CreateAuthor(string name, string surname, int numberOfPublication, DateTime dob = default)
         {
-            ICreationResult<IAuthor> result = CreateAuthor(name, surname);
+            ICreationResult<IAuthor> result = CreateAuthor(name, surname, dob);
             if (result.CreationSuccessful)
                 ((Author)result.Item).NumberOfPublishedBooks = numberOfPublication;
 
