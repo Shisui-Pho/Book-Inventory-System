@@ -88,7 +88,87 @@ namespace BookInventory
 
         public IBook FindByISBN(string isbn)
         {
-            throw new NotImplementedException();
+            IBook book = null;
+            try
+            {
+                //First check if the connection is open or closed
+                if (_service.GetConnection().State == ConnectionState.Closed)
+                    _service.GetConnection().Open();
+
+                //Create a command tha will use the stored procedure for loading a new book
+                SqlCommand cmd = new SqlCommand("proc_FindBookByISBN", (SqlConnection)_service.GetConnection());
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@@BookISBN", isbn);
+
+                //Execute the command
+                SqlDataReader rd = cmd.ExecuteReader();
+
+                //Book properties
+                string title = "";
+                string genre = "";
+                int publication = 0;
+                int quantity = 0;
+                int Book_Id = 0;
+                List<IAuthor> authors = new List<IAuthor>();
+                //Load the book
+
+               // SELECT Book.Book_ID,
+               //Book.Book_ISBN,
+               //Book.Book_Title,
+               //Book.Genre,
+               //Book.PublicationYear,
+               //Book.Quantity,
+               //Author.Author_ID,
+               //Author.Author_Name,
+               //Author.Author_Surname,
+               //Author.DOB,
+               //Author.Publications AS AuthorPublications
+
+                //NOTE:
+                //- The procedure will return n rows where n is the number of authors,
+                //      the book information will remain the same for all the authors
+                while (rd.Read())
+                {
+                    //Read the values
+                    //-The book values will remain the same for the book columns, 
+                    if(Book_Id == 0)
+                    {
+                        Book_Id = int.Parse(rd["Book_ID"].ToString());
+                        title = rd["Book_Title"].ToString();
+                        genre = rd["Genre"].ToString();
+                        quantity = int.Parse(rd["Quantity"].ToString());
+                        publication = int.Parse(rd["PublicationYear"].ToString());
+                    }//end if
+
+                    //Author details
+                    int auth_id = int.Parse(rd["Author_ID"].ToString());
+                    string auth_name = rd["Author_Name"].ToString();
+                    string auth_Surname = rd["Author_Surname"].ToString();
+                    int noPub= int.Parse(rd["AuthorPublications"].ToString());
+                    DateTime dob = DateTime.ParseExact(rd["DOB"].ToString(), "yyyy/MM/dd", null);
+                    ICreationResult<IAuthor> resultAuthor = AuthorFactory.CreateAuthor(auth_name, auth_Surname, noPub, dob);
+
+                    //Asume the data is correct
+                    IAuthor auth = resultAuthor.Item;
+
+                    ((Author)auth).ID = auth_id;
+
+                    //Add to the list of authors
+                    authors.Add(auth);
+                }//end while
+
+                //Add the author 
+                ICreationResult<IBook> result = BookFactory.CreateBook(title, isbn, genre, publication, authors, quantity);
+
+                if (result.CreationSuccessful)
+                {
+                    ((Book)result.Item).ID = Book_Id;
+                    book = result.Item;
+                }
+            }//namespace
+            catch (Exception ex){ ExceptionLogger.GetLogger().LogError(ex); }
+            finally{ if (_service.GetConnection().State == ConnectionState.Open) _service.GetConnection().Close(); }
+            return book;
         }//FindByISBN
 
         public IEnumerable<IBook> LoadAllBooks()
