@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\AccessDB\AccessBookRepositoryCommands\AccessAuthorRepository.cs" />
     <Compile Include="Data\AccessDB\AccessBookRepositoryCommands\AccessAddCommand.cs" />
     <Compile Include="Data\AccessDB\AccessBookRepositoryCommands\AccessFilterCommand.cs" />
     <Compile Include="Data\AccessDB\AccessBookRepositoryCommands\AccessLoadCommand.cs" />
