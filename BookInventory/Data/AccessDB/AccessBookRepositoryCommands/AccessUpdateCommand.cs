@@ -7,13 +7,13 @@ using System.Data.OleDb;
 
 namespace BookInventory
 {
-    internal class UpdateBookCommand
+    internal class AccessUpdateCommand
     {
         private readonly IDatabaseService _dbService;
 
         //-The AddAuthors Method sits in the BookRepository class
         private readonly delAddAuthors AddAuthors;
-        public UpdateBookCommand(IDatabaseService dbService, delAddAuthors addAuthors)
+        public AccessUpdateCommand(IDatabaseService dbService, delAddAuthors addAuthors)
         {
             this._dbService = dbService;
             this.AddAuthors = addAuthors;

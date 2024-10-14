@@ -9,13 +9,13 @@ using System.Data.OleDb;
 
 namespace BookInventory
 {
-    internal class FilterBooksCommand
+    internal class AccessFilterCommand
     {
         private readonly IDatabaseService _dbService;
 
         //-The GetAuthors Method sits in the BookRepository class
         private readonly delLoadAuthors GetAuthors;
-        public FilterBooksCommand(IDatabaseService dbService, delLoadAuthors getAuthors)
+        public AccessFilterCommand(IDatabaseService dbService, delLoadAuthors getAuthors)
         {
             this._dbService = dbService;
             this.GetAuthors = getAuthors;
@@ -23,7 +23,7 @@ namespace BookInventory
 
         public IEnumerable<IBook> FilterBooks(Predicate<IBook> predicate)
         {
-            LoadingBooksCommand cmd = new LoadingBooksCommand(_dbService, GetAuthors);
+            AccessLoadCommand cmd = new AccessLoadCommand(_dbService, GetAuthors);
             foreach (IBook book in cmd.LoadAllBooks())
                 if (predicate(book))
                     yield return book;

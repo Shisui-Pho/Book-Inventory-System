@@ -23,14 +23,14 @@ namespace BookInventory
         public bool AddBook(IBook book)
         {
             //Create a command for adding a new book
-            AddingBookCommand cmd = new AddingBookCommand(_dbService, AddAuthors);
+            AccessAddCommand cmd = new AccessAddCommand(_dbService, AddAuthors);
             return cmd.AddBook(book);//Add the book
         }//AddBook
         
         public IEnumerable<IBook> FilterBooks(string authorName = null, string genre = null, string title = null, int? release = null)
         {
             //Create a command for filtering books
-            FilterBooksCommand cmd = new FilterBooksCommand(_dbService, GetAuthors);
+            AccessFilterCommand cmd = new AccessFilterCommand(_dbService, GetAuthors);
             //Execute the command to filter and return the books matching the criteria
             return cmd.FilterBooks(authorName, genre, title, release);
         }//FilterBooks
@@ -40,7 +40,7 @@ namespace BookInventory
             //-It will enumerate through all the books and then the client will spacify the condingtions of the filter
             
             //Create a command for filtering books
-            FilterBooksCommand cmd = new FilterBooksCommand(_dbService, GetAuthors);//Create the command
+            AccessFilterCommand cmd = new AccessFilterCommand(_dbService, GetAuthors);//Create the command
 
             //-Execute the command and return the results
             return cmd.FilterBooks(predicate);
@@ -48,7 +48,7 @@ namespace BookInventory
         public IBook FindByISBN(string isbn)
         {
             //Create a command for finding a book by ISBN number
-            LoadingBooksCommand cmd = new LoadingBooksCommand(_dbService, GetAuthors);
+            AccessLoadCommand cmd = new AccessLoadCommand(_dbService, GetAuthors);
 
             //Execute the command and return the book
             return cmd.FindByISBN(isbn);
@@ -56,7 +56,7 @@ namespace BookInventory
         public IEnumerable<IBook> LoadAllBooks()
         {
             //Create a command for laoading books
-            LoadingBooksCommand cmd = new LoadingBooksCommand(_dbService, GetAuthors);
+            AccessLoadCommand cmd = new AccessLoadCommand(_dbService, GetAuthors);
 
             //Execute the command and all books
             return cmd.LoadAllBooks();
@@ -64,7 +64,7 @@ namespace BookInventory
         public bool UpdateBook(IBook book)
         {
             //Create an update command
-            UpdateBookCommand cmd = new UpdateBookCommand(_dbService, AddAuthors);
+            AccessUpdateCommand cmd = new AccessUpdateCommand(_dbService, AddAuthors);
 
             //Execute the command and return the outcome status
             return cmd.UpdateBook(book);
@@ -72,7 +72,7 @@ namespace BookInventory
         public bool RemoveBook(IBook book)
         {
             //Create a removebook command
-            RemoveBookCommand cmd = new RemoveBookCommand(_dbService);
+            AccessRemoveCommand cmd = new AccessRemoveCommand(_dbService);
             //Execute the command and return the outcome status
             return cmd.RemoveBook(book);
         }//RemoveBook

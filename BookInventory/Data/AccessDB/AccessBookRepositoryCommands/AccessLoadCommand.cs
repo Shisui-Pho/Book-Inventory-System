@@ -8,13 +8,13 @@ using System.Data.OleDb;
 
 namespace BookInventory
 {
-    internal class LoadingBooksCommand
+    internal class AccessLoadCommand
     {
         private readonly IDatabaseService _dbService;
 
         //-The GetAuthors Method sits in the BookRepository class
         private readonly delLoadAuthors GetAuthors;
-        public LoadingBooksCommand(IDatabaseService databaseService, delLoadAuthors getAuthors)
+        public AccessLoadCommand(IDatabaseService databaseService, delLoadAuthors getAuthors)
         {
             this._dbService = databaseService;
             this.GetAuthors = getAuthors;
