@@ -49,7 +49,6 @@
     <Compile Include="Data\AccessDB\AccessCommands\AccessUpdateCommand.cs" />
     <Compile Include="Data\BookRepository.cs" />
     <Compile Include="Data\ICommands Interfaces.cs" />
-    <Compile Include="Data\SQLServerDB\SQLServerBookRepository.cs" />
     <Compile Include="Data\SQLServerDB\SQLServerCommands\SQLLoadingCommand.cs" />
     <Compile Include="Data\SQLServerDB\SQLServerCommands\SQLServerAddCommand.cs" />
     <Compile Include="Data\SQLServerDB\SQLServerCommands\SQLServerFilterCommand.cs" />
