@@ -35,7 +35,7 @@ namespace BookInventory
                 cmd.Parameters.AddWithValue("@Publication", book.PublicationYear);
                 cmd.Parameters.AddWithValue("@Genre", book.Genre);
                 cmd.Parameters.Add(BookIDOutParameter);
-                cmd.Parameters.AddWithValue("@Authors", SQLServerAuthorsToString.ToAuthorsString(book.BookAuthors));//Pass the formatted author string
+                cmd.Parameters.AddWithValue("@Authors", SQLServerUtility.ToAuthorsString(book.BookAuthors));//Pass the formatted author string
 
                 //Execute the command
                 SqlDataReader rd = cmd.ExecuteReader();
