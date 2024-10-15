@@ -5,7 +5,7 @@ ALTER PROCEDURE proc_UpdateBook
                 @Quantity           SMALLINT,
                 @Publication        SMALLINT,
                 @Genre              VARCHAR(200),
-                @Book_ID            INT OUTPUT, -- ID Of the book will be needed on the client side
+                @Book_ID            INT,
 
                 @Authors            VARCHAR(MAX)
 AS
@@ -23,8 +23,7 @@ BEGIN
     --     @Quantity (SMALLINT): Quantity of the book.
     --     @Publication (SMALLINT): Publication year of the book.
     --     @Genre (VARCHAR(200)): Genre of the book.
-    --     @Book_ID (INT OUTPUT): Output parameter to return the ID of the 
-    --                            updated book.
+    --     @Book_ID (INT ): ID of the updated book.
     --     @Authors (VARCHAR(MAX)): Author details formatted as:
     --         id1,''name1'', ''surname1'';id2,''name2'',''surname2'';...
     --         where id is 0 to add a new author, and each field is 
@@ -97,7 +96,7 @@ BEGIN
     --Re-link the authors and books
     --We assume that the authors have already been added to the database
     INSERT INTO BookAuthor(Book_ID, Author_ID)
-    SELECT @Book_ID, [ID]
+    SELECT @Book_ID AS Book_ID, [ID] AS Author_ID
     FROM #TempAuthorsDet;
 
         IF @@ERROR <> 0

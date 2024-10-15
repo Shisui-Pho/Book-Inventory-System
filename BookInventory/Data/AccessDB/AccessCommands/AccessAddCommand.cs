@@ -7,19 +7,17 @@ using System.Data.OleDb;
 
 namespace BookInventory
 {
-    internal class AddingBookCommand
+    internal class AccessAddCommand : IAddBookCommand
     {
         private readonly IDatabaseService _dbService;
-
-        //-The AddAuthors Method sits in the BookRepository class
-        private readonly delAddAuthors AddAuthors;
-        public AddingBookCommand(IDatabaseService dbService, delAddAuthors addAuthors)
+        public AccessAddCommand(IDatabaseService dbService)
         {
             this._dbService = dbService;
-            this.AddAuthors = addAuthors;
         }
         public bool AddBook(IBook book)
         {
+            //Create a new instance of author repository for adding the authors
+            AccessAuthorRepository authors = new AccessAuthorRepository(_dbService);
             IDbTransaction trans = null;
             bool isTransactionComplete = false;
             try
@@ -58,7 +56,7 @@ namespace BookInventory
                 //Update the book id
                 ((Book)book).ID = bookid;
 
-                isTransactionComplete = AddAuthors(book, trans);
+                isTransactionComplete = authors.AddAuthors(book, trans);
                 if (isTransactionComplete)
                     trans.Commit();//Save the changes
 

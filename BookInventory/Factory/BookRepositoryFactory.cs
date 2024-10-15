@@ -14,9 +14,18 @@ namespace BookInventory
         /// <returns>An creatoin result object that contains the repository and additional information about the operation.</returns>
         public static ICreationResult<IBookRepository> CreateBookRepository(string connectionString, DatabaseType dbType)
         {
+            //Declarations
             ICreationResult<IBookRepository> result;
             IDatabaseService dbService = null;
             IBookRepository repository = null;
+
+            //-Commands
+            IAddBookCommand cmdAddBook = null;
+            IRemoveBookCommand cmdRemoveBook = null;
+            IUpdateBookCommand cmdUpdateBook = null;
+            IFilterBooksCommand cmdFilterBooks = null;
+            ILoadingBooksCommand cmdLoading = null;
+
             //Create the dbService
             try
             {
@@ -25,10 +34,25 @@ namespace BookInventory
                     case DatabaseType.AccessDB:
                         //Create the access objects
                         dbService = new AccessDatabaseService(connectionString);
-                        repository = new AccessBookRepository(dbService);
+
+                        //Create th seperate commands for the access database engine
+                        cmdAddBook = new AccessAddCommand(dbService);
+                        cmdRemoveBook = new AccessRemoveCommand(dbService);
+                        cmdUpdateBook = new AccessUpdateCommand(dbService);
+                        cmdFilterBooks = new AccessFilterCommand(dbService);
+                        cmdLoading = new AccessLoadCommand(dbService);
+
                         break;
                     case DatabaseType.SQLServerDB:
                         //Create the SQL Server Objects
+                        dbService = new SQLServerDatabaseService(connectionString);
+
+                        //Create t he seperate commands for the sqlserver engine
+                        cmdAddBook = new SQLServerAddCommand(dbService);
+                        cmdRemoveBook = new SQLServerRemoveCommand(dbService);
+                        cmdUpdateBook = new SQLServerUpdateCommand(dbService);
+                        cmdFilterBooks = new SQLServerFilterCommand(dbService);
+                        cmdLoading = new SQLServerLoadingCommand(dbService);
                         break;
                     default:
                         break;
@@ -44,7 +68,9 @@ namespace BookInventory
                     dbService.GetConnection().Open();//Open the connection for testing
                     dbService.GetConnection().Close();//Close the connection for testing
 
-                    //Here everything can be assumed to be fine
+                    //If the connection was successful
+                    //-Create a new book repository and pass the commands
+                    repository = new BookRepository(cmdAddBook, cmdLoading, cmdFilterBooks, cmdRemoveBook, cmdUpdateBook);
                     result = new CreationResult<IBookRepository>("Repository created successfully.", repository, true);
                 }
             }

@@ -41,11 +41,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\AccessDB\AccessBookRepositoryCommands\AddingBookCommand.cs" />
-    <Compile Include="Data\AccessDB\AccessBookRepositoryCommands\FilterBooksCommand.cs" />
-    <Compile Include="Data\AccessDB\AccessBookRepositoryCommands\LoadingBooksCommand.cs" />
-    <Compile Include="Data\AccessDB\AccessBookRepositoryCommands\RemoveBookCommand.cs" />
-    <Compile Include="Data\AccessDB\AccessBookRepositoryCommands\UpdateBookCommand.cs" />
+    <Compile Include="Data\AccessDB\AccessCommands\AccessAuthorRepository.cs" />
+    <Compile Include="Data\AccessDB\AccessCommands\AccessAddCommand.cs" />
+    <Compile Include="Data\AccessDB\AccessCommands\AccessFilterCommand.cs" />
+    <Compile Include="Data\AccessDB\AccessCommands\AccessLoadCommand.cs" />
+    <Compile Include="Data\AccessDB\AccessCommands\AccessRemoveCommand.cs" />
+    <Compile Include="Data\AccessDB\AccessCommands\AccessUpdateCommand.cs" />
+    <Compile Include="Data\BookRepository.cs" />
+    <Compile Include="Data\ICommands Interfaces.cs" />
+    <Compile Include="Data\SQLServerDB\SQLServerCommands\SQLServerLoadingCommand.cs" />
+    <Compile Include="Data\SQLServerDB\SQLServerCommands\SQLServerAddCommand.cs" />
+    <Compile Include="Data\SQLServerDB\SQLServerCommands\SQLServerFilterCommand.cs" />
+    <Compile Include="Data\SQLServerDB\SQLServerCommands\SQLServerRemoveCommand.cs" />
+    <Compile Include="Data\SQLServerDB\SQLServerCommands\SQLServerUpdateCommand.cs" />
+    <Compile Include="Data\SQLServerDB\SQLServerDatabaseService.cs" />
     <Compile Include="Factory\AuthorFactory.cs" />
     <Compile Include="Factory\BookFactory.cs" />
     <Compile Include="Factory\BookRepositoryFactory.cs" />
@@ -54,7 +63,6 @@
     <Compile Include="Factory\ICreationResult.cs" />
     <Compile Include="Models\Author.cs" />
     <Compile Include="Models\Book.cs" />
-    <Compile Include="Data\AccessDB\AccessBookRepository.cs" />
     <Compile Include="Utilities\Custom Logging\ExceptionLogger.cs" />
     <Compile Include="Data\AccessDB\AccessDatabaseService.cs" />
     <Compile Include="Interfaces\IAuthor.cs" />
@@ -63,6 +71,7 @@
     <Compile Include="Data\IDatabaseService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\ISBNFormatterService.cs" />
+    <Compile Include="Utilities\SQLServerUtility.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

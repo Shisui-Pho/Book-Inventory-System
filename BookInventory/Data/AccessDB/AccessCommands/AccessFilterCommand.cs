@@ -9,29 +9,29 @@ using System.Data.OleDb;
 
 namespace BookInventory
 {
-    internal class FilterBooksCommand
+    internal class AccessFilterCommand : IFilterBooksCommand
     {
         private readonly IDatabaseService _dbService;
 
-        //-The GetAuthors Method sits in the BookRepository class
-        private readonly delLoadAuthors GetAuthors;
-        public FilterBooksCommand(IDatabaseService dbService, delLoadAuthors getAuthors)
+        public AccessFilterCommand(IDatabaseService dbService)
         {
             this._dbService = dbService;
-            this.GetAuthors = getAuthors;
         }//ctor main
 
         public IEnumerable<IBook> FilterBooks(Predicate<IBook> predicate)
         {
-            LoadingBooksCommand cmd = new LoadingBooksCommand(_dbService, GetAuthors);
+            AccessLoadCommand cmd = new AccessLoadCommand(_dbService);
             foreach (IBook book in cmd.LoadAllBooks())
                 if (predicate(book))
                     yield return book;
         }//FilterBooks
-        public IEnumerable<IBook> FilterBooks(string authorName, string genre, string title , int? release)
+        public IEnumerable<IBook> FilterBooks(bool matchAllCriteria, string authorName = null, string authorSurname = null, string genre = null, string title = null)
         {
+            //Create the author repository for retrieving the authors
+            AccessAuthorRepository authorsRepository = new AccessAuthorRepository(_dbService);
+
             List<IBook> books = new List<IBook>();
-            string _sql = BuildSql(authorName, genre, title, release);
+            string _sql = BuildSql(authorName, genre, title);
             try
             {
                 if (_dbService.GetConnection().State == ConnectionState.Closed)
@@ -50,7 +50,7 @@ namespace BookInventory
                     int publication = int.Parse(rd["PublicationYear"].ToString());
 
                     //Get the book authors
-                    IEnumerable<IAuthor> authors = GetAuthors(bookid);
+                    IEnumerable<IAuthor> authors = authorsRepository.GetAuthors(bookid);
 
                     #warning Still need to deal with invalid input/data
                     //For now we assume that the data retrieved from the database is valid
@@ -76,7 +76,7 @@ namespace BookInventory
             }
             return books;
         }//FilterBooks
-        private string BuildSql(string authorName, string genre, string title, int? release)
+        private string BuildSql(string authorName, string genre, string title, int? release = null)
         {
             string sql_ = " SELECT Book.Book_ID, Book.Book_Title, Book.Book_ISBN, Book.PublicationYear, Book.Genre, Book.Quantity" +
                           " FROM ( Book INNER JOIN BookAuthor ON Book.Book_ID =  BookAuthor.Book_ID)" +
