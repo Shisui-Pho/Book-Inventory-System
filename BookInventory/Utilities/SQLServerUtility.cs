@@ -48,59 +48,68 @@ namespace BookInventory.Utilities
             int Book_Id = 0;
             string isbn = "";
             List<IAuthor> authors = new List<IAuthor>();
-
-            while(rd.Read())
+            try
             {
-                if(BookID_Track == int.MinValue)//FirstTimeLoop
+                while (rd.Read())
                 {
-                    Book_Id = int.Parse(rd["Book_ID"].ToString());
-                    title = rd["Book_Title"].ToString();
-                    genre = rd["Genre"].ToString();
-                    quantity = int.Parse(rd["Quantity"].ToString());
-                    publication = int.Parse(rd["PublicationYear"].ToString());
-                    isbn = rd["Book_ISBN"].ToString();
+                    if (BookID_Track == int.MinValue)//FirstTimeLoop
+                    {
+                        Book_Id = int.Parse(rd["Book_ID"].ToString());
+                        title = rd["Book_Title"].ToString();
+                        genre = rd["Genre"].ToString();
+                        quantity = int.Parse(rd["Quantity"].ToString());
+                        publication = int.Parse(rd["PublicationYear"].ToString());
+                        isbn = rd["Book_ISBN"].ToString();
 
-                    BookID_Track = Book_Id;
-                }//end if
-                else//Read the current value of the id in the record
-                    BookID_Track = int.Parse(rd["Book_ID"].ToString());
+                        BookID_Track = Book_Id;
+                    }//end if
+                    else//Read the current value of the id in the record
+                        BookID_Track = int.Parse(rd["Book_ID"].ToString());
 
-                //Author details
-                int auth_id = int.Parse(rd["Author_ID"].ToString());
-                string auth_name = rd["Author_Name"].ToString();
-                string auth_Surname = rd["Author_Surname"].ToString();
-                int noPub = int.Parse(rd["AuthorPublications"].ToString());
-                DateTime dob = DateTime.ParseExact(rd["DOB"].ToString(), "yyyy/MM/dd", null);
+                    //Author details
+                    int auth_id = int.Parse(rd["Author_ID"].ToString());
+                    string auth_name = rd["Author_Name"].ToString();
+                    string auth_Surname = rd["Author_Surname"].ToString();
+                    int noPub = int.Parse(rd["AuthorPublications"].ToString());
+                    DateTime dob = DateTime.ParseExact(rd["DOB"].ToString(), "yyyy/MM/dd", null);
 
-                //Create the author
-                ICreationResult<IAuthor> resultAuthor = AuthorFactory.CreateAuthor(auth_name, auth_Surname, noPub, dob);
-                //Asume the data is correct(since it comes from the database)
-                IAuthor auth = resultAuthor.Item;
-                ((Author)auth).ID = auth_id;
+                    //Create the author
+                    ICreationResult<IAuthor> resultAuthor = AuthorFactory.CreateAuthor(auth_name, auth_Surname, noPub, dob);
+                    //Asume the data is correct(since it comes from the database)
+                    IAuthor auth = resultAuthor.Item;
+                    ((Author)auth).ID = auth_id;
 
-                //Check if were still on the same book
-                if(BookID_Track != Book_Id)
-                {
-                    //This means we are on anoher book
-                    //-Add the previous book and it's authors to the list of books with it's authors
-                    ICreationResult<IBook> bookResult = BookFactory.CreateBook(title, isbn, genre, publication, authors, quantity);
+                    //Check if were still on the same book
+                    if (BookID_Track != Book_Id)
+                    {
+                        //This means we are on anoher book
+                        //-Add the previous book and it's authors to the list of books with it's authors
+                        ICreationResult<IBook> bookResult = BookFactory.CreateBook(title, isbn, genre, publication, authors, quantity);
 
-                    //Assume the data is correct(since it comes from the database)
-                    ((Book)bookResult.Item).ID = Book_Id;
-                    books.Add(bookResult.Item);//Add the book
+                        //Assume the data is correct(since it comes from the database)
+                        ((Book)bookResult.Item).ID = Book_Id;
+                        books.Add(bookResult.Item);//Add the book
 
-                    //Refresh the athors list
-                    authors = new List<IAuthor>();
+                        //Refresh the athors list
+                        authors = new List<IAuthor>();
 
-                    //Add the current author
-                    authors.Add(auth);
+                        //Add the current author
+                        authors.Add(auth);
 
-                    //Set the Current Book Track to the min value
-                    BookID_Track = int.MinValue;
-                }//end if different book
-                else
-                    authors.Add(auth);//Still the same book
-            }//end while
+                        //Set the Current Book Track to the min value
+                        BookID_Track = int.MinValue;
+                    }//end if different book
+                    else
+                        authors.Add(auth);//Still the same book
+                }//end while
+            }//end try
+            catch
+            (Exception ex)
+            {
+                ExceptionLogger.GetLogger().LogError(ex);
+                books = new List<IBook>();//Refresh the list of books
+            }//end catch
+
             return books;
         }//ToBookList
     }//class
