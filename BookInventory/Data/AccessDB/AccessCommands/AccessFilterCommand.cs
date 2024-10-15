@@ -25,13 +25,13 @@ namespace BookInventory
                 if (predicate(book))
                     yield return book;
         }//FilterBooks
-        public IEnumerable<IBook> FilterBooks(string authorName, string genre, string title , int? release)
+        public IEnumerable<IBook> FilterBooks(bool matchAllCriteria, string authorName = null, string authorSurname = null, string genre = null, string title = null)
         {
             //Create the author repository for retrieving the authors
             AccessAuthorRepository authorsRepository = new AccessAuthorRepository(_dbService);
 
             List<IBook> books = new List<IBook>();
-            string _sql = BuildSql(authorName, genre, title, release);
+            string _sql = BuildSql(authorName, genre, title);
             try
             {
                 if (_dbService.GetConnection().State == ConnectionState.Closed)
@@ -76,7 +76,7 @@ namespace BookInventory
             }
             return books;
         }//FilterBooks
-        private string BuildSql(string authorName, string genre, string title, int? release)
+        private string BuildSql(string authorName, string genre, string title, int? release = null)
         {
             string sql_ = " SELECT Book.Book_ID, Book.Book_Title, Book.Book_ISBN, Book.PublicationYear, Book.Genre, Book.Quantity" +
                           " FROM ( Book INNER JOIN BookAuthor ON Book.Book_ID =  BookAuthor.Book_ID)" +

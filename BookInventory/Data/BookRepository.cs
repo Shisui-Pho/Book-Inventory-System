@@ -32,9 +32,9 @@ namespace BookInventory
             return this.cmdAddBook.AddBook(book);
         }//AddBook
 
-        public IEnumerable<IBook> FilterBooks(string authorName = null, string genre = null, string title = null, int? release = null)
+        public IEnumerable<IBook> FilterBooks(bool matchAllCriteria, string authorName = null, string authorSurname = null, string genre = null, string title = null)
         {
-            return this.cmdFiltering.FilterBooks(authorName, genre, title, release);
+            return this.cmdFiltering.FilterBooks(matchAllCriteria, authorName, authorSurname, genre, title);
         }//FilterBooks
 
         public IEnumerable<IBook> FilterBooks(Predicate<IBook> predicate)

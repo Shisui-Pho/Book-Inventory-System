@@ -26,6 +26,6 @@ namespace BookInventory
     public interface IFilterBooksCommand
     {
         IEnumerable<IBook> FilterBooks(Predicate<IBook> predicate);
-        IEnumerable<IBook> FilterBooks(string authorName, string genre, string title, int? release);
+        IEnumerable<IBook> FilterBooks(bool matchAllCriteria, string authorName = null, string authorSurname = null, string genre = null, string title = null);
     }//IFilterBooks
 }//namespace

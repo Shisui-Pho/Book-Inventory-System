@@ -15,10 +15,11 @@ namespace BookInventory
         }//ctor main
         public IEnumerable<IBook> FilterBooks(Predicate<IBook> predicate)
         {
-            throw new NotImplementedException();
+            //We need to load all books
+            return default;
         }//FilterBooks
 
-        public IEnumerable<IBook> FilterBooks(string authorName, string genre, string title, int? release)
+        public IEnumerable<IBook> FilterBooks(bool matchAllCriteria, string authorName = null, string authorSurname = null, string genre = null, string title = null)
         {
             throw new NotImplementedException();
         }//FilterBooks

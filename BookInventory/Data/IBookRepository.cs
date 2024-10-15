@@ -41,9 +41,8 @@ namespace BookInventory
         /// </summary>
         /// <param name="authorName">The name of the author if filter requires.</param>
         /// <param name="genre">The genre of the book if filter requires.</param>
-        /// <param name="quantity">The quantity at hand if the filter requires.</param>
         /// <returns>The filtered books</returns>
-        IEnumerable<IBook> FilterBooks(string authorName = null, string genre = null, string title = null, int? release = null);
+        IEnumerable<IBook> FilterBooks(bool matchAllCriteria, string authorName = null, string authorSurname = null, string genre = null, string title = null);
         /// <summary>
         /// Filter books based on the given information. The filtering will take place inside the application, all books will be loaded from 
         ///     the database and filtered on the application.
