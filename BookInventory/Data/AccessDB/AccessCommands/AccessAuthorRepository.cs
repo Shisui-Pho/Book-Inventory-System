@@ -1,84 +1,21 @@
 ﻿/*
- * This file contains the BookRepository class which acts as a "Facede" for the CRUD operations implemented by the different commands on books(database)
+ *  This class contains the class for adding authors in a database which will form part of some transaction
  */
-
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.OleDb;
+
 namespace BookInventory
 {
-    //delegates for passing helper methods to the command classes
-    internal delegate IEnumerable<IAuthor> delLoadAuthors(int bookid);
-    internal delegate bool delAddAuthors(IBook book, IDbTransaction trans);
-    internal class AccessBookRepository : IBookRepository
+    internal class AccessAuthorRepository
     {
-        //Database service 
         private readonly IDatabaseService _dbService;
-
-        public AccessBookRepository(IDatabaseService service)
+        public AccessAuthorRepository(IDatabaseService ser)
         {
-            this._dbService = service;
-        }
-        public bool AddBook(IBook book)
-        {
-            //Create a command for adding a new book
-            AddingBookCommand cmd = new AddingBookCommand(_dbService, AddAuthors);
-            return cmd.AddBook(book);//Add the book
-        }//AddBook
-        
-        public IEnumerable<IBook> FilterBooks(string authorName = null, string genre = null, string title = null, int? release = null)
-        {
-            //Create a command for filtering books
-            FilterBooksCommand cmd = new FilterBooksCommand(_dbService, GetAuthors);
-            //Execute the command to filter and return the books matching the criteria
-            return cmd.FilterBooks(authorName, genre, title, release);
-        }//FilterBooks
-        public IEnumerable<IBook> FilterBooks(Predicate<IBook> predicate)
-        {
-            //This method will load all the books into memory and then start filtering
-            //-It will enumerate through all the books and then the client will spacify the condingtions of the filter
-            
-            //Create a command for filtering books
-            FilterBooksCommand cmd = new FilterBooksCommand(_dbService, GetAuthors);//Create the command
-
-            //-Execute the command and return the results
-            return cmd.FilterBooks(predicate);
-        }//FilterBooks
-        public IBook FindByISBN(string isbn)
-        {
-            //Create a command for finding a book by ISBN number
-            LoadingBooksCommand cmd = new LoadingBooksCommand(_dbService, GetAuthors);
-
-            //Execute the command and return the book
-            return cmd.FindByISBN(isbn);
-        }//FindByISBN
-        public IEnumerable<IBook> LoadAllBooks()
-        {
-            //Create a command for laoading books
-            LoadingBooksCommand cmd = new LoadingBooksCommand(_dbService, GetAuthors);
-
-            //Execute the command and all books
-            return cmd.LoadAllBooks();
-        }//LoadAllBooks
-        public bool UpdateBook(IBook book)
-        {
-            //Create an update command
-            UpdateBookCommand cmd = new UpdateBookCommand(_dbService, AddAuthors);
-
-            //Execute the command and return the outcome status
-            return cmd.UpdateBook(book);
-        }//UpdateBook
-        public bool RemoveBook(IBook book)
-        {
-            //Create a removebook command
-            RemoveBookCommand cmd = new RemoveBookCommand(_dbService);
-            //Execute the command and return the outcome status
-            return cmd.RemoveBook(book);
-        }//RemoveBook
-
-        #region Delegate helper methods
-        private bool AddAuthors(IBook book, IDbTransaction transaction)
+            this._dbService = ser;
+        }//ctor 
+        public bool AddAuthors(IBook book, IDbTransaction transaction)
         {
             try
             {
@@ -107,7 +44,7 @@ namespace BookInventory
                             ((Author)author).ID = int.Parse(rd["Author_ID"].ToString());
                             break;
                         }
-                        if(author.ID == default)
+                        if (author.ID == default)
                         {
                             //Configure command for addiing a new author
                             cmd.CommandText = "qAddAuthor";
@@ -163,12 +100,14 @@ namespace BookInventory
                 return false;
             }//end catch
         }//AddAuthors
-        private IEnumerable<IAuthor> GetAuthors(int bookid)
+        public IEnumerable<IAuthor> GetAuthors(int bookid)
         {
             IList<IAuthor> authors = new List<IAuthor>();
 
             try
             {
+                if (_dbService.GetConnection().State == ConnectionState.Closed)
+                    _dbService.GetConnection().Open();
                 //The connection is already open here
                 string sql = "qAuthorsInformationPerBook";
 
@@ -203,7 +142,5 @@ namespace BookInventory
             }
             return authors;
         }
-
-        #endregion Delegate helper methods
     }//class
 }//namespace
