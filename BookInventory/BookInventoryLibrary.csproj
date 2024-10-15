@@ -72,7 +72,7 @@
     <Compile Include="Data\IDatabaseService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\ISBNFormatterService.cs" />
-    <Compile Include="Utilities\SQLServerAuthorsToString.cs" />
+    <Compile Include="Utilities\SQLServerUtility.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
