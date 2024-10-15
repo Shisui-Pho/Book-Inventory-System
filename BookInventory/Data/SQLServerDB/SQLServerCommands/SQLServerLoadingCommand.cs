@@ -8,10 +8,10 @@ using System.Data.SqlClient;
 using BookInventory.Utilities;
 namespace BookInventory
 {
-    internal class SQLLoadingCommand : ILoadingBooksCommand
+    internal class SQLServerLoadingCommand : ILoadingBooksCommand
     {
         private readonly IDatabaseService _dbService;
-        public SQLLoadingCommand(IDatabaseService dbService)
+        public SQLServerLoadingCommand(IDatabaseService dbService)
         {
             this._dbService = dbService;
         }//ctor main

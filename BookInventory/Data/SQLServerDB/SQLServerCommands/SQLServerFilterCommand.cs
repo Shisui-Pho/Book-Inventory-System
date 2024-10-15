@@ -18,7 +18,7 @@ namespace BookInventory
         public IEnumerable<IBook> FilterBooks(Predicate<IBook> predicate)
         {
             //We need to load all books
-            ILoadingBooksCommand cmd = new SQLLoadingCommand(_dbService);
+            ILoadingBooksCommand cmd = new SQLServerLoadingCommand(_dbService);
             IEnumerable<IBook> books = cmd.LoadAllBooks();
 
             //Enumerate the books

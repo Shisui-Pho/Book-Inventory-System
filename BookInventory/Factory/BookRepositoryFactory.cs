@@ -45,6 +45,14 @@ namespace BookInventory
                         break;
                     case DatabaseType.SQLServerDB:
                         //Create the SQL Server Objects
+                        dbService = new SQLServerDatabaseService(connectionString);
+
+                        //Create t he seperate commands for the sqlserver engine
+                        cmdAddBook = new SQLServerAddCommand(dbService);
+                        cmdRemoveBook = new SQLServerRemoveCommand(dbService);
+                        cmdUpdateBook = new SQLServerUpdateCommand(dbService);
+                        cmdFilterBooks = new SQLServerFilterCommand(dbService);
+                        cmdLoading = new SQLServerLoadingCommand(dbService);
                         break;
                     default:
                         break;
