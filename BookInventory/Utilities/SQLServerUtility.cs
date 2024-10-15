@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace BookInventory.Utilities
 {
-    internal static class SQLServerAuthorsToString
+    internal static class SQLServerUtility
     {
         public static string ToAuthorsString(IEnumerable<IAuthor> authors)
         {
