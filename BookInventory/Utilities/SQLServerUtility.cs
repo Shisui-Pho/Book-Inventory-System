@@ -5,10 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Globalization;
+using System.Linq;
 
 namespace BookInventory.Utilities
 {
-    internal static class SQLServerUtility
+    internal class SQLServerUtility
     {
         public static string ToAuthorsString(IEnumerable<IAuthor> authors)
         {
@@ -36,36 +37,37 @@ namespace BookInventory.Utilities
                 6       | 978-0-670-81302-4| The Tenth Insight       | Non-fiction   | 1996            | 2        | 107       | James          | Redfield      | 1950-10-19 | 3
                 6       | 978-0-670-81302-4| The Tenth Insight       | Non-fiction   | 1996            | 2        | 108       | William        | Arntz         | 1943-05-29 | 2
             */
-
-            //This will keep track on the book we're reading from the database 
-            int BookID_Track = int.MinValue;
-
-            List<IBook> books = new List<IBook>();
+            //A key value pair of the book id and the list of authors
+            //-We use this approach since the Book model has an IEnumerable<IAuthor> which means we cannot add new authors after book creation
+            List<KeyValuePair<IBook, List<IAuthor>>> author_bookPair = new List<KeyValuePair<IBook, List<IAuthor>>>();
+           
             //Book properties
-            string title = "";
-            string genre = "";
-            int publication = 0;
-            int quantity = 0;
-            int Book_Id = 0;
-            string isbn = "";
-            List<IAuthor> authors = new List<IAuthor>();
+            string title;
+            string genre;
+            int publication;
+            int quantity;
+            int Book_Id;
+            string isbn;
             try
             {
                 while (rd.Read())
                 {
-                    if (BookID_Track == int.MinValue)//FirstTimeLoop
-                    {
-                        Book_Id = int.Parse(rd["Book_ID"].ToString());
-                        title = rd["Book_Title"].ToString();
-                        genre = rd["Genre"].ToString();
-                        quantity = int.Parse(rd["Quantity"].ToString());
-                        publication = int.Parse(rd["PublicationYear"].ToString());
-                        isbn = rd["Book_ISBN"].ToString();
+                    //The book details will not change for different authors of the same book
+                    Book_Id = int.Parse(rd["Book_ID"].ToString());
+                    title = rd["Book_Title"].ToString();
+                    genre = rd["Genre"].ToString();
+                    quantity = int.Parse(rd["Quantity"].ToString());
+                    publication = int.Parse(rd["PublicationYear"].ToString());
+                    isbn = rd["Book_ISBN"].ToString();
 
-                        BookID_Track = Book_Id;
-                    }//end if
-                    else//Read the current value of the id in the record
-                        BookID_Track = int.Parse(rd["Book_ID"].ToString());
+                    //Check if the pair exist in the keyValuePairs
+                    if (author_bookPair.FirstOrDefault(b => b.Key.ID == Book_Id).Key == default)
+                    {
+                        IBook book = BookFactory.CreateBook(title, isbn, genre, publication, new List<IAuthor>(), quantity).Item;
+                        ((Book)book).ID = Book_Id;
+                        author_bookPair.Add(new KeyValuePair<IBook, List<IAuthor>>(book, new List<IAuthor>()));
+                    }//end if book not existing yet
+
 
                     //Author details
                     int auth_id = int.Parse(rd["Author_ID"].ToString());
@@ -75,43 +77,27 @@ namespace BookInventory.Utilities
 
                     DateTime dob = DateTime.ParseExact(rd["DOB"].ToString(), "yyyy/MM/dd HH:mm:ss", new CultureInfo("en-ZA"), DateTimeStyles.None);
                     //Create the author
-                    ICreationResult<IAuthor> resultAuthor = AuthorFactory.CreateAuthor(auth_name, auth_Surname, noPub, dob);
-                    //Asume the data is correct(since it comes from the database)
-                    IAuthor auth = resultAuthor.Item;
+                    //-Asume the data is correct(since it comes from the database)
+                    IAuthor auth = AuthorFactory.CreateAuthor(auth_name, auth_Surname, noPub, dob).Item;
                     ((Author)auth).ID = auth_id;
 
-                    //Check if were still on the same book
-                    if (BookID_Track != Book_Id)
-                    {
-                        //This means we are on anoher book
-                        //-Add the previous book and it's authors to the list of books with it's authors
-                        ICreationResult<IBook> bookResult = BookFactory.CreateBook(title, isbn, genre, publication, authors, quantity);
-
-                        //Assume the data is correct(since it comes from the database)
-                        ((Book)bookResult.Item).ID = Book_Id;
-                        books.Add(bookResult.Item);//Add the book
-
-                        //Refresh the athors list
-                        authors = new List<IAuthor>();
-
-                        //Add the current author
-                        authors.Add(auth);
-
-                        //Set the Current Book Track to the min value
-                        BookID_Track = int.MinValue;
-                    }//end if different book
-                    else
-                        authors.Add(auth);//Still the same book
-                }//end while
+                    //Add the author to the specified book
+                    author_bookPair.Find(b => b.Key.ID == Book_Id).Value.Add(auth);
+                }
             }//end try
             catch
             (Exception ex)
             {
                 ExceptionLogger.GetLogger().LogError(ex);
-                books = new List<IBook>();//Refresh the list of books
             }//end catch
 
-            return books;
+            //Do some crazy linq statement
+            return author_bookPair.Select(pair => Select(pair)).ToList();
         }//ToBookList
+        private static IBook Select(KeyValuePair<IBook, List<IAuthor>> pair)
+        {
+            ((Book)pair.Key).BookAuthors = pair.Value;
+            return pair.Key;
+        }
     }//class
 }//namespace1

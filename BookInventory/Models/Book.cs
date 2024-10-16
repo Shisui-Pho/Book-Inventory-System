@@ -20,7 +20,7 @@ namespace BookInventory
 
         public int PublicationYear { get; private set; }
 
-        public IEnumerable<IAuthor> BookAuthors { get; private set; }
+        public IEnumerable<IAuthor> BookAuthors { get; internal set; }
         public Book(string isbn, string title, string genre, IEnumerable<IAuthor> authors, int publicationYear, int quantity = 1)
         {
             this.ISBN = isbn;
