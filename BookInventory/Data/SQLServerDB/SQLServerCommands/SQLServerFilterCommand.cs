@@ -32,6 +32,10 @@ namespace BookInventory
             IList<IBook> books = new List<IBook>(); 
             try
             {
+                //Check if the connections is open
+                if (_dbService.GetConnection().State == ConnectionState.Closed)
+                    _dbService.GetConnection().Open();
+
                 //Create the command
                 SqlCommand cmd = new SqlCommand("proc_FilterBook", (SqlConnection)_dbService.GetConnection());
                 cmd.CommandType = CommandType.StoredProcedure;
