@@ -29,6 +29,16 @@ namespace BookInventory
 
         public IEnumerable<IBook> FilterBooks(bool matchAllCriteria, string authorName = null, string authorSurname = null, string genre = null, string title = null)
         {
+            //Set the null values to a default value to ensure that the stored procedure receives a valid value.
+            //-This prevents null-related errors in the SQL procedure, allowing for proper filtering of books.
+            if (authorName == null)
+                authorName = "";
+            if (authorSurname == null)
+                authorSurname = "";
+            if (title == null)
+                title = "";
+            if (genre == null)
+                genre = "";
             IList<IBook> books = new List<IBook>(); 
             try
             {

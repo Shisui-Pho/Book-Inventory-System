@@ -40,8 +40,8 @@ BEGIN
     --     - Find books by author name 'J.K.' or surname 'Rowling':
     --       EXEC proc_FilterBook @AuthorName = 'J.K.', @AuthorSurname = 'owling', @MustContainValues = 0;
     -- =====================================================================
-*/
-    --The default values should all be null
+    */
+    
     DECLARE @Sql          VARCHAR(MAX),
             @BracketAdded BIT;
 
@@ -61,12 +61,11 @@ BEGIN
                 FROM Book   
                 INNER JOIN BookAuthor ON BookAuthor.Book_ID = Book.Book_ID 
                 INNER JOIN Author ON BookAuthor.Author_ID = Author.Author_ID 
-                WHERE 1 =1 ';--Add a default statement for the filter criteria, this will allow for filtering before joining other tables
-                                                 --    and also for future extension of the ceode(adding new filtering conditions)
--- Initialize a flag to determine if any filters have been added
+                WHERE 1 =1 '; 
+
     DECLARE @FilterAdded BIT = 0;
 
-    IF(@Book_Title IS NOT NULL)
+    IF(@Book_Title IS NOT NULL AND @Book_Title <> '')
     BEGIN
         IF @MustContainValues = 1
             SET @Sql = @Sql + ' AND Book.Book_Title LIKE ''%' + @Book_Title + '%''';
@@ -77,7 +76,7 @@ BEGIN
         END
     END
 
-    IF(@Genre IS NOT NULL)
+    IF(@Genre IS NOT NULL AND @Genre <> '')
     BEGIN
         IF @MustContainValues = 1
             SET @Sql = @Sql + ' AND Genre LIKE ''%' + @Genre + '%''';
@@ -93,7 +92,7 @@ BEGIN
         END
     END
 
-    IF(@AuthorName IS NOT NULL)
+    IF(@AuthorName IS NOT NULL AND @AuthorName <> '')
     BEGIN
         IF @MustContainValues = 1
             SET @Sql = @Sql + ' AND Author.Author_Name LIKE ''%' + @AuthorName + '%''';
@@ -109,7 +108,7 @@ BEGIN
         END
     END
 
-    IF(@AuthorSurname IS NOT NULL)
+    IF(@AuthorSurname IS NOT NULL AND @AuthorSurname <> '')
     BEGIN
         IF @MustContainValues = 1
             SET @Sql = @Sql + ' AND Author.Author_Surname LIKE ''%' + @AuthorSurname + '%''';
@@ -125,7 +124,6 @@ BEGIN
         END
     END
 
-    -- Close the grouping if any OR conditions were added
     IF @FilterAdded = 1
         SET @Sql = @Sql + ' )'; 
 
