@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Globalization;
 
 namespace BookInventory.Utilities
 {
@@ -71,8 +72,8 @@ namespace BookInventory.Utilities
                     string auth_name = rd["Author_Name"].ToString();
                     string auth_Surname = rd["Author_Surname"].ToString();
                     int noPub = int.Parse(rd["AuthorPublications"].ToString());
-                    DateTime dob = DateTime.ParseExact(rd["DOB"].ToString(), "yyyy/MM/dd", null);
 
+                    DateTime dob = DateTime.ParseExact(rd["DOB"].ToString(), "yyyy/MM/dd HH:mm:ss", new CultureInfo("en-ZA"), DateTimeStyles.None);
                     //Create the author
                     ICreationResult<IAuthor> resultAuthor = AuthorFactory.CreateAuthor(auth_name, auth_Surname, noPub, dob);
                     //Asume the data is correct(since it comes from the database)
