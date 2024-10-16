@@ -41,7 +41,7 @@ namespace BookInventory
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 //Pass the parameters
-                cmd.Parameters.AddWithValue("@Book_Title ", title);
+                cmd.Parameters.AddWithValue("@Book_Title", title);
                 cmd.Parameters.AddWithValue("@Genre", genre);
                 cmd.Parameters.AddWithValue("@AuthorName", authorName);
                 cmd.Parameters.AddWithValue("@AuthorSurname", authorSurname);
