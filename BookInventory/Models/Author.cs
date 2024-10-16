@@ -5,7 +5,7 @@ using System;
 
 namespace BookInventory
 {
-    public class Author : IAuthor
+    internal class Author : IAuthor
     {
         public int ID { get; internal set; } = default;
 
