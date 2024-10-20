@@ -21,14 +21,14 @@ namespace BookInventory
                     _dbService.GetConnection().Open();
 
                 //Create the sql command
-                SqlCommand cmd = new SqlCommand("pro_RemoveBook", (SqlConnection)_dbService.GetConnection());
+                SqlCommand cmd = new SqlCommand("proc_RemoveBook", (SqlConnection)_dbService.GetConnection());
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@BookID", book.ID);
 
                 int result = cmd.ExecuteNonQuery();
 
                 //If result is "1" then it was a successful transaction otherwise it failed
-                return result == 1;
+                return result >= 1;
             }
             catch
             (Exception ex)

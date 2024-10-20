@@ -27,7 +27,7 @@ namespace BookInventory
                 //Create a command tha will use the stored procedure for loading a new book
                 SqlCommand cmd = new SqlCommand("proc_FindBookByISBN", (SqlConnection)_dbService.GetConnection());
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@@BookISBN", isbn);
+                cmd.Parameters.AddWithValue("@BookISBN", isbn);
 
                 //Execute the command
                 SqlDataReader rd = cmd.ExecuteReader();

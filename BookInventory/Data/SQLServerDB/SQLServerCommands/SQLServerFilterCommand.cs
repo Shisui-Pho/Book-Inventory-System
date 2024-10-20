@@ -29,15 +29,29 @@ namespace BookInventory
 
         public IEnumerable<IBook> FilterBooks(bool matchAllCriteria, string authorName = null, string authorSurname = null, string genre = null, string title = null)
         {
+            //Set the null values to a default value to ensure that the stored procedure receives a valid value.
+            //-This prevents null-related errors in the SQL procedure, allowing for proper filtering of books.
+            if (authorName == null)
+                authorName = "";
+            if (authorSurname == null)
+                authorSurname = "";
+            if (title == null)
+                title = "";
+            if (genre == null)
+                genre = "";
             IList<IBook> books = new List<IBook>(); 
             try
             {
+                //Check if the connections is open
+                if (_dbService.GetConnection().State == ConnectionState.Closed)
+                    _dbService.GetConnection().Open();
+
                 //Create the command
                 SqlCommand cmd = new SqlCommand("proc_FilterBook", (SqlConnection)_dbService.GetConnection());
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 //Pass the parameters
-                cmd.Parameters.AddWithValue("@Book_Title ", title);
+                cmd.Parameters.AddWithValue("@Book_Title", title);
                 cmd.Parameters.AddWithValue("@Genre", genre);
                 cmd.Parameters.AddWithValue("@AuthorName", authorName);
                 cmd.Parameters.AddWithValue("@AuthorSurname", authorSurname);

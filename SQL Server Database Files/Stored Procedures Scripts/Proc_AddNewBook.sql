@@ -105,7 +105,7 @@ BEGIN
 
             --Here we might need to also check if we are not duplicating authors(autho)
             --Check if an author with the same names exists
-            SET @AuthorID_test = (SELECT Author_ID FROM Author WHERE Author_Name = @AuthorName AND Author_Surname = @AuthorSurname AND DOB = @DOB);
+            SET @AuthorID_test = (SELECT Top 1 Author_ID FROM Author WHERE Author_Name = @AuthorName AND Author_Surname = @AuthorSurname AND DOB = @DOB);
 
             IF @AuthorID_test IS NOT NULL
             BEGIN
@@ -115,9 +115,12 @@ BEGIN
                 WHERE AuthorName = @AuthorName
                 AND   AuthorSurname = @AuthorSurname
                 AND DOB = @DOB;
+
+                --Update the authorID 
+                SET @AuthorID = @AuthorID_test;
             END
             --Check if the author exists(by id)
-            IF NOT EXISTS (SELECT Author_Name FROM Author WHERE Author_ID = @AuthorID)
+            ELSE IF NOT EXISTS (SELECT Author_Name FROM Author WHERE Author_ID = @AuthorID)
             BEGIN
                 --Create a new author record
                 INSERT INTO Author(Author_Name, Author_Surname, Publications, DOB)
