@@ -44,11 +44,11 @@ namespace BookInventory
                 //-If Book_ID = NULL --> Then the transaction was not complete
                 //      - Otherwise it was complete
 
-                if (cmd.Parameters["@Book_ID"].Value is null)
-                    return false;
+                //if (cmd.Parameters["@Book_ID"].Value is null)
+                //    return false;
 
                 //Update the Book_ID
-                ((Book)book).ID = int.Parse(cmd.Parameters["@Book_ID"].Value.ToString());
+
 
                 //Here the book and the respective authors were added to the database
                 //-The returned table will be of the form:
@@ -57,13 +57,17 @@ namespace BookInventory
                 //NOTE:
                 //- The order in which the author string was created is the order in which the ID's are created
                 //- The number of records return is equal to the number of authors in the "book.BookAuthors" properties
-
                 foreach (IAuthor author in book.BookAuthors)
                 {
                     if (rd.Read())
                     {
                         //Update the author ID
                         ((Author)author).ID = int.Parse(rd["Author_ID"].ToString());
+
+                        //Update the bookID
+                        //-The book ID will remain the same for all the authors
+                        if(book.ID == default)
+                            ((Book)book).ID = int.Parse(rd["Book_ID"].ToString());
                     }//end if
                 }//end foreach
                 return true;
