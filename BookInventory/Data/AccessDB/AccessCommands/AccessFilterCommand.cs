@@ -31,7 +31,7 @@ namespace BookInventory
             AccessAuthorRepository authorsRepository = new AccessAuthorRepository(_dbService);
 
             List<IBook> books = new List<IBook>();
-            string _sql = BuildSql(authorName, genre, title);
+            string _sql = BuildSql(matchAllCriteria,authorName,authorSurname ,genre, title);
             try
             {
                 if (_dbService.GetConnection().State == ConnectionState.Closed)
@@ -76,7 +76,7 @@ namespace BookInventory
             }
             return books;
         }//FilterBooks
-        private string BuildSql(string authorName, string genre, string title, int? release = null)
+        private string BuildSql(bool matchAllCriteria, string authorName, string authorSurname,string genre, string title)
         {
             string sql_ = " SELECT Book.Book_ID, Book.Book_Title, Book.Book_ISBN, Book.PublicationYear, Book.Genre, Book.Quantity" +
                           " FROM ( Book INNER JOIN BookAuthor ON Book.Book_ID =  BookAuthor.Book_ID)" +
@@ -84,14 +84,16 @@ namespace BookInventory
 
             //A queue for the query commands
             Queue<string> qCriteria = new Queue<string>();
+
+            //Check for the criteria for the SQL Query statement
             if (!String.IsNullOrEmpty(authorName))
-                qCriteria.Enqueue(String.Format(" (Author.Author_Name LIKE '*{0}*' OR Author.Author_Surname LIKE '*{0}*')", authorName));
+                qCriteria.Enqueue(String.Format($" Author.Author_Name LIKE '*{authorName}*'"));
+            if(!String.IsNullOrEmpty(authorSurname))
+                qCriteria.Enqueue(String.Format($" Author.Author_Surname LIKE '*{authorSurname}*'"));
             if (!String.IsNullOrEmpty(genre))
                 qCriteria.Enqueue(String.Format(" Book.Genre LIKE \'*{0}*\'", genre));
             if (!String.IsNullOrEmpty(title))
                 qCriteria.Enqueue(String.Format(" Book.Book_Title LIKE \'*{0}*\'", title));
-            if (release.HasValue)
-                qCriteria.Enqueue(String.Format(" Book.PublicationYear = {0} ", release));
 
             bool isFirstCondition = true;
             while (qCriteria.Count > 0)
@@ -102,7 +104,7 @@ namespace BookInventory
                     isFirstCondition = false;
                 }
                 else
-                    sql_ += " AND " + qCriteria.Dequeue();
+                    sql_ += (matchAllCriteria ? " AND " : " OR ") + qCriteria.Dequeue();
             }//end while
             return sql_;
         }//Build Sql method
