@@ -4,6 +4,8 @@
 
 using System;
 using System.Collections.Generic;
+using BookInventory.Utilities;
+
 namespace BookInventory
 {
     internal class BookRepository : IBookRepository
@@ -44,6 +46,9 @@ namespace BookInventory
 
         public IBook FindByISBN(string isbn)
         {
+            //First format the isbn string
+            isbn = ISBNFormatterService.ToISBNFormat(isbn);
+
             return this.cmdBookLoading.FindBookByISBN(isbn);
         }//FindByISBN
 
