@@ -5,66 +5,65 @@
 using System;
 using System.Collections.Generic;
 using BookInventory.Utilities;
-
+using System.Linq;
 namespace BookInventory
 {
     internal class BookRepository : IBookRepository
     {
         //This are the commands that are going to be used
-        //-This commands are lightweight as they only have the database service object only in them
-        private readonly IAddBookCommand cmdAddBook;
-        private readonly ILoadingBooksCommand cmdBookLoading;
-        private readonly IFilterBooksCommand cmdFiltering;
-        private readonly IRemoveBookCommand cmdRemoveBook;
-        private readonly IUpdateBookCommand cmdUpdatedBook;
+        //-The dbFactory will create the required commands when needed
+        private readonly IDBCommandFactory _dbCommandFactory;
 
         //Inject all the dependencies in the contructor
-        public BookRepository(IAddBookCommand cmAdd, ILoadingBooksCommand cmLoad, IFilterBooksCommand cmFilt, 
-                              IRemoveBookCommand cmRem, IUpdateBookCommand cmUpd)
+        public BookRepository(IDBCommandFactory commandFactory)
         {
-            this.cmdAddBook = cmAdd;
-            this.cmdBookLoading = cmLoad;
-            this.cmdFiltering = cmFilt;
-            this.cmdRemoveBook = cmRem;
-            this.cmdUpdatedBook = cmUpd;
+            _dbCommandFactory = commandFactory;
         }//ctor main
         public bool AddBook(IBook book)
         {
             //Execute the command for adding the book
-            return this.cmdAddBook.AddBook(book);
+            IAddBookCommand add = this._dbCommandFactory.GetAddBookCommand();
+            return add?.AddBook(book) ?? false;
         }//AddBook
 
         public IEnumerable<IBook> FilterBooks(bool matchAllCriteria, string authorName = null, string authorSurname = null, string genre = null, string title = null)
         {
-            return this.cmdFiltering.FilterBooks(matchAllCriteria, authorName, authorSurname, genre, title);
+            IFilterBooksCommand filter = this._dbCommandFactory.GetFilterBooksCommand();
+
+            return filter?.FilterBooks(matchAllCriteria, authorName, authorSurname, genre, title) ?? Enumerable.Empty<IBook>();
         }//FilterBooks
 
         public IEnumerable<IBook> FilterBooks(Predicate<IBook> predicate)
         {
-            return this.cmdFiltering.FilterBooks(predicate);
+            IFilterBooksCommand filter = this._dbCommandFactory.GetFilterBooksCommand();
+            return filter?.FilterBooks(predicate) ?? Enumerable.Empty<IBook>();
         }//FilterBooks
 
         public IBook FindByISBN(string isbn)
         {
             //First format the isbn string
             isbn = ISBNFormatterService.ToISBNFormat(isbn);
+            ILoadingBooksCommand load = this._dbCommandFactory.GetLoadingBooksCommand();
 
-            return this.cmdBookLoading.FindBookByISBN(isbn);
+            return load?.FindBookByISBN(isbn) ?? null;
         }//FindByISBN
 
         public IEnumerable<IBook> LoadAllBooks()
         {
-            return this.cmdBookLoading.LoadAllBooks();
+            ILoadingBooksCommand load = this._dbCommandFactory.GetLoadingBooksCommand();
+            return load?.LoadAllBooks() ?? Enumerable.Empty<IBook>();
         }//LoadAllBooks
 
         public bool RemoveBook(IBook book)
         {
-            return this.cmdRemoveBook.RemoveBook(book);
+            IRemoveBookCommand remove = this._dbCommandFactory.GetRemoveBookCommand();
+            return remove?.RemoveBook(book) ?? false;
         }//RemoveBook
 
         public bool UpdateBook(IBook book)
         {
-            return this.cmdUpdatedBook.UpdateBook(book);
+            IUpdateBookCommand update = _dbCommandFactory.GetUpdateBookCommand();
+            return update?.UpdateBook(book) ?? false;
         }//UpdateBook
     }//class
 }//namespace

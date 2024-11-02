@@ -7,24 +7,17 @@ namespace BookInventory
     public static class BookRepositoryFactory
     {
         /// <summary>
-        /// This method creates a BookRepository that establishes the connection between the database and the application
+        /// This method creates a BookRepository that establishes the connection between the database and the application.
         /// </summary>
-        /// <param name="connectionString">The connection string of the database</param>
-        /// <param name="dbType">The type of datbase that need to be used</param>
-        /// <returns>An creatoin result object that contains the repository and additional information about the operation.</returns>
+        /// <param name="connectionString">The connection string of the database.</param>
+        /// <param name="dbType">The type of database that needs to be used.</param>
+        /// <returns>A creation result object that contains the repository and additional information about the operation.</returns>
         public static ICreationResult<IBookRepository> CreateBookRepository(string connectionString, DatabaseType dbType)
         {
             //Declarations
             ICreationResult<IBookRepository> result;
             IDatabaseService dbService = null;
-            IBookRepository repository = null;
-
-            //-Commands
-            IAddBookCommand cmdAddBook = null;
-            IRemoveBookCommand cmdRemoveBook = null;
-            IUpdateBookCommand cmdUpdateBook = null;
-            IFilterBooksCommand cmdFilterBooks = null;
-            ILoadingBooksCommand cmdLoading = null;
+            IBookRepository repository;
 
             //Create the dbService
             try
@@ -34,25 +27,10 @@ namespace BookInventory
                     case DatabaseType.AccessDB:
                         //Create the access objects
                         dbService = new AccessDatabaseService(connectionString);
-
-                        //Create th seperate commands for the access database engine
-                        cmdAddBook = new AccessAddCommand(dbService);
-                        cmdRemoveBook = new AccessRemoveCommand(dbService);
-                        cmdUpdateBook = new AccessUpdateCommand(dbService);
-                        cmdFilterBooks = new AccessFilterCommand(dbService);
-                        cmdLoading = new AccessLoadCommand(dbService);
-
                         break;
                     case DatabaseType.SQLServerDB:
                         //Create the SQL Server Objects
                         dbService = new SQLServerDatabaseService(connectionString);
-
-                        //Create t he seperate commands for the sqlserver engine
-                        cmdAddBook = new SQLServerAddCommand(dbService);
-                        cmdRemoveBook = new SQLServerRemoveCommand(dbService);
-                        cmdUpdateBook = new SQLServerUpdateCommand(dbService);
-                        cmdFilterBooks = new SQLServerFilterCommand(dbService);
-                        cmdLoading = new SQLServerLoadingCommand(dbService);
                         break;
                     default:
                         break;
@@ -69,8 +47,10 @@ namespace BookInventory
                     dbService.GetConnection().Close();//Close the connection for testing
 
                     //If the connection was successful
-                    //-Create a new book repository and pass the commands
-                    repository = new BookRepository(cmdAddBook, cmdLoading, cmdFilterBooks, cmdRemoveBook, cmdUpdateBook);
+                    //-Create a new Commnad Factory
+                    IDBCommandFactory dbCommand = new DBCommandFactory(dbType, dbService);
+                    //-Create a new book repository and pass the command factory
+                    repository = new BookRepository(dbCommand);
                     result = new CreationResult<IBookRepository>("Repository created successfully.", repository, true);
                 }
             }
