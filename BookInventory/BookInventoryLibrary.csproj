@@ -60,7 +60,9 @@
     <Compile Include="Factory\BookRepositoryFactory.cs" />
     <Compile Include="Factory\CreationResult.cs" />
     <Compile Include="Factory\DatabaseType.cs" />
+    <Compile Include="Factory\DBCommandFactory.cs" />
     <Compile Include="Factory\ICreationResult.cs" />
+    <Compile Include="Factory\IDBCommandFactory.cs" />
     <Compile Include="Models\Author.cs" />
     <Compile Include="Models\Book.cs" />
     <Compile Include="Utilities\Custom Logging\ExceptionLogger.cs" />
