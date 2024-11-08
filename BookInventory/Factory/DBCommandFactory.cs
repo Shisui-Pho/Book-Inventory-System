@@ -15,7 +15,7 @@ namespace BookInventory
             switch(dbType)
             {
                 case DatabaseType.AccessDB: _commandStrategy = new AccessCommandStrategy(); break;
-                case DatabaseType.SQLServerDB:  new SQLServerCommandStrategy(); break;
+                case DatabaseType.SQLServerDB: _commandStrategy = new SQLServerCommandStrategy(); break;
                 default:  throw new NotSupportedException("Database type not supported");
             };
         }//ctor main
