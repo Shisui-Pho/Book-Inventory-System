@@ -1,6 +1,11 @@
-# Book-Inventory-System
+<h1 align="center">Book-Inventory-System</h1>
+<p align="center">
+  <img src="https://img.shields.io/badge/.NET%20Framework-4.7.2-blue" alt=".NET Framework 4.7.2">
+  <img src="https://img.shields.io/badge/License-MIT-blue" alt="MIT License">
+  <img src="https://img.shields.io/badge/Build-Passing-brightgreen" alt="Build Status">
+</p>
 
-## Table of Contents  
+## Table of Contents
 1. [Introduction](#introduction)  
 2. [Features](#features)  
 3. [System Architecture](#system-architecture)  
@@ -22,7 +27,10 @@
    - [Removing Books](#removing-books)  
    - [Filtering Books](#filtering-books)  
    - [Finding Books by ISBN](#finding-books-by-isbn)    
-7. [Contact Information](#contact-information)  
+7. [Contact Information](#contact-information)
+
+
+
 ## Introduction  
 
 The **Book Inventory System** is designed to manage a collection of books using two database options: **Microsoft Access** and **SQL Server**. The system allows users to perform key operations such as adding, updating, removing, and filtering books. Throughout the development of this system, I applied several **software engineering principles** to ensure the architecture is both **maintainable** and **scalable**. The solution is built with **Object-Oriented Programming (OOP)** principles, utilizing design patterns like the **Repository Pattern** and **Command Pattern** to decouple business logic from database operations.
@@ -69,7 +77,7 @@ The class diagram below illustrates the relationship between key classes and int
 
 ![Class Diagram](./Achitecture/Class.png)
 
-### ERD (Entity-Relationship Diagram)  
+### ERD Diagram (Entity-Relationship Diagram)  
 The ERD diagram below demonstrates the relationships between the entities in the Book Inventory System, including the primary tables like `Book`, `Author`, and `BookAuthor`, as well as the connections between them.
 
 ![ERD Diagram](./Achitecture/ERD.png)
@@ -135,10 +143,10 @@ To use the system with a Microsoft Access database, follow these steps:
    The application will automatically connect to the database using the provided connection string and display the results.
 
 ### SQL Server  
-For SQL Server, you have two setup options:
+There are two ways to set up the SQL Server database. The first option is preferred:
 
-1. **Using SQL Scripts**  
-   Execute the pre-written SQL scripts to create the necessary schema, including tables, functions, triggers, and stored procedures. The scripts can be found in the following folders, execute the schema first:
+1. **Preferred: Using SQL Scripts**  
+   Execute the provided SQL scripts to create the necessary schema, including tables, functions, triggers, and stored procedures. These scripts are organized into the following folders. Start by executing the schema script, followed by the others:
    ```plaintext
    /Book-Inventory-System/SQL Server Database Files/Schema
    /Book-Inventory-System/SQL Server Database Files/Functions
@@ -146,10 +154,14 @@ For SQL Server, you have two setup options:
    /Book-Inventory-System/SQL Server Database Files/Triggers
    ```
 
-3. **Using Pre-Script for Additional Setup**  
-   The script handles extra configurations and stored procedures for maintaining the integrity of the system.
+2. **Alternative: Using the Pre-Script for Additional Setup**  
+   Alternatively, you can run a single pre-configured script that handles all additional setups, including database integrity maintenance and stored procedure creation. This script can be found here:
+   ```plaintext
+   /Book-Inventory-System/Book Inventory System.sql
+   ```
+   You can execute this script using SQL Server Management Studio (SSMS) or Azure Data Studio to complete the setup.
 
-Once the SQL Server database is set up, update the connection string in `App.config` to point to the correct instance of SQL Server.
+Once the database setup is complete, make sure to update the connection string in the `App.config` file to point to the correct SQL Server instance.
 
 ---
 
